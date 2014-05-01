@@ -36,6 +36,12 @@ define('DB_PASS', 'ProjetSI');
  * 
  */
 define('LDAP_HOST', '127.0.0.1');
-define('LDAP_PORT', '10389');
+define('LDAP_PORT', '11389');
 define('LDAP_RDN', 'uid=admin,ou=system');
 define('LDAP_PASS', 'secret');
+
+/**
+*
+*Dossier où serons créés les dossier racines des services
+*/
+define('RACINE','services/');

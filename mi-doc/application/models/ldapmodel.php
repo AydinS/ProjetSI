@@ -52,7 +52,11 @@ public  function Connexion($uid,$password)
 				echo "LDAP bind successful... Welcome ".$info[0]["mail"][0]."<br/>";
 				$_SESSION['cn'] = $info[0]["cn"][0];
 				$_SESSION['sn'] = $info[0]["sn"][0];
+				$_SESSION['uid'] = $info[0]["uid"][0];
 				$_SESSION['mail'] = $info[0]["mail"][0];
+				$service = LdapModel::SearchServiceUtilisateur($uid);
+				if($service != 0)
+					$_SESSION['service'] = $service[0]["cn"][0]; // on récup le service
 			}
 			return $ds;
 		} else {
@@ -86,7 +90,7 @@ public  function Connexion($uid,$password)
 		//Recherche du service de l'utilisateur
 		$result = ldap_search(
 				$ds,
-				'ou=services,dc=projetsi,dc=com',
+				SERVICES_TREE,
 				'(&(objectClass=groupOfUniqueNames)(uniqueMember=uid='.$uid.'))'
 		);
 		

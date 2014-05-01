@@ -58,7 +58,7 @@ drop sequence s_t3;
 CREATE SEQUENCE s_t3 START WITH 1 INCREMENT BY 1;
 
 -- -----------------------------------------------------------------------------
---       CREATION DU TRIGGER AUTO_INCREMENT FICHIER
+--       CREATION DU TRIGGER AUTO_INCREMENT VALIDATION
 -- -----------------------------------------------------------------------------
 
 drop trigger tr_t3;
@@ -122,8 +122,8 @@ BEGIN
 select count(*) into v_nb from FAIRE;
 
 IF v_nb>0 then
-    :new.ID_DROIT := s_t5.nextval;
-    else :new.ID_DROIT := 1;
+    :new.ID_FAIRE := s_t5.nextval;
+    else :new.ID_FAIRE := 1;
 END IF;
 END;
 /

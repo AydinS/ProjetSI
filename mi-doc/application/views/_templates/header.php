@@ -37,7 +37,7 @@
 						echo '<li><a href="'.URL.'navigation/index">Navigation</a>';
 					}
 				?>
-                <li><a href="<?php echo URL.'contacts/index'; ?>">Contacts</a>
+                <!--<li><a href="<?php //echo URL.'contacts/index'; ?>">Contacts</a>-->
                 </li>
                 </li>
                 <li><a href="#">Overview</a>
