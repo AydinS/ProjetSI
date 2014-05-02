@@ -12,8 +12,11 @@
     <!-- Bootstrap core CSS -->
     <link href="<?php echo URL.'public/'; ?>css/bootstrap.css" rel="stylesheet">
 
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
     <!-- Add custom CSS here -->
     <link href="<?php echo URL.'public/'; ?>css/simple-sidebar.css" rel="stylesheet">
+	<link href="<?php echo URL.'public/'; ?>css/filter.css" rel="stylesheet">
     <link href="<?php echo URL.'public/fonts/'; ?>font-awesome.min.css" rel="stylesheet">
 
 </head>
