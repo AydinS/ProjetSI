@@ -1,5 +1,10 @@
+<div class="content-header">
+    <h1>
+        <a id="menu-toggle" href="#" class="btn btn-default"><i class="icon-reorder"></i></a>
+                    <?php  if(isset($_SESSION['SERVICE'])) echo  'Service: '.$_SESSION['SERVICE']; ?>
+    </h1>
+</div>
 <div class="page-content inset">
-<br/>
 <div class="row">
  <div class="panel panel-primary filterable">
             <div class="panel-heading">
@@ -17,7 +22,7 @@
 						if($maxd > 0){
 							$str = $str.$d.'/';
 							$infos = $navModel->getIdFicByPath(substr($str,0,strlen($str)-1));
-							echo '<li><a href="'.URL.'navigation/displaycontent/'.$infos['idfic'].'">'.$d.'</a></li>';
+							echo '<li><a href="'.URL.'navigation/displaycontent/'.$infos['ID_FICHIER'].'">'.$d.'</a></li>';
 						}
 						else{
 							$str = $str.'/'.$d;
@@ -29,7 +34,9 @@
 				}
 			?> 
 				</ol>
-                <h3 class="panel-title">Fichiers</h3>
+				<?php if(isset($_SESSION['CURR_DIR_ID'])) {echo '<a href="'.URL.'upload/uploadto/'.$_SESSION['CURR_DIR_ID'].'" class="btn btn-default" role="button">Upload</a> <br/>';}?>
+                <!--<h3 class="panel-title">Fichiers</h3>-->
+				
                 <div class="pull-right">
                     <button class="btn btn-default btn-xs btn-filter"><span class="glyphicon glyphicon-filter"></span> Filter</button>
                 </div>
@@ -39,7 +46,7 @@
 	        <table class="table">
                 <thead>
                     <tr class="filters">
-                        <th><input type="text" class="form-control" placeholder="#" disabled></th>
+                        <th><input type="text" class="form-control" placeholder="Propriétaire" disabled></th>
                         <th><input type="text" class="form-control" placeholder="Nom" disabled></th>
                         <th><input type="text" class="form-control" placeholder="Description" disabled></th>
                         <th><input type="text" class="form-control" placeholder="Action" disabled></th>
@@ -54,23 +61,25 @@
 				$str = "";
 				for($i = 0;$i<$maxf;$i++){
 					echo '<tr>';
-					echo '<td>'.$i.'</td>';
-					echo '<td>'.$fichiers[$i]['nom'].'</td>';
-					echo '<td>'.$fichiers[$i]['desc'].'</td>';
+					echo '<td>'.$fichiers[$i]['ID_USER'].'</td>';
+					echo '<td>'.$fichiers[$i]['NOM'].'</td>';
+					echo '<td>'.$fichiers[$i]['DESC'].'</td>';
 					echo '<td>';
 					//btn ouvrir si dossier  et si droit :
 					
-					if($fichiers[$i]['dossier'] == 1){
+					if($fichiers[$i]['DOSSIER'] == 1){//Si c'est un dossier un formulaire se chargera du bouton pour consulter le dossier
 						echo '<form action="'.URL.'navigation/gotodirectory" method="POST">';
-						echo '<button type="submit" name="gotodirectory" value="'.$fichiers[$i]['path'].'/'.$fichiers[$i]['nom'].'" class="btn btn-primary" role="button">Ouvrir</button>';
+						//On devrait bloquer ce bouton si l'utilisateur n'a pas les droits, on récupère le droit via la variable $fichiers[$i]['DROIT']
+						echo '<button type="submit" name="gotodirectory" value="'.$fichiers[$i]['PATH'].'/'.$fichiers[$i]['NOM'].'" class="btn btn-primary" role="button">Ouvrir</button>';
 						
 					}
-					else{
-						echo '<a href="'.$fichiers[$i]['path'].''.$fichiers[$i]['nom'].'" class="btn btn-primary" role="button" download="'.$fichiers[$i]['nom'].'">Ddl</a>';
-						echo '<a href="'.$fichiers[$i]['path'].''.$fichiers[$i]['nom'].'" class="btn btn-default" role="button">Up</a>';
+					else{//Ici on devrai bloquer l'acces au bouton les droits que possède l'utilisateur sur le fichier
+						//on récupère le droit via la variable : $fichiers[$i]['DROIT'] 
+						echo '<a href="'.$fichiers[$i]['PATH'].''.$fichiers[$i]['NOM'].'" class="btn btn-primary" role="button" download="'.$fichiers[$i]['NOM'].'">Download</a>&nbsp;&nbsp;&nbsp;';
+						echo '<a href="'.$fichiers[$i]['PATH'].''.$fichiers[$i]['NOM'].'" class="btn btn-default" role="button">Upload</a>';
 					}
-					echo '<input type="hidden" name="idfic" value="'.$fichiers[$i]['idfic'].'" class="btn btn-primary">';
-					if($fichiers[$i]['dossier'] == 1){
+					echo '<input type="hidden" name="idfic" value="'.$fichiers[$i]['ID_FICHIER'].'" class="btn btn-primary">';
+					if($fichiers[$i]['DOSSIER'] == 1){//On ferme le formulaire
 						echo '</form>';
 					}
 					echo '</td>';

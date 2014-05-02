@@ -57,7 +57,7 @@ public  function Connexion($uid,$password)
 				$_SESSION['mail'] = $info[0]["mail"][0];
 				$service = LdapModel::SearchServiceUtilisateur($uid);
 				if($service != 0)
-					$_SESSION['service'] = $service[0]["cn"][0]; // on récup le service
+					$_SESSION['SERVICE'] = $service[0]["cn"][0]; // on récup le service
 			}
 			return $ds;
 		} else {

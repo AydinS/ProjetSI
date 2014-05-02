@@ -45,15 +45,16 @@ class NavigationModel
 	
 	public function getIdFicByPath($path){
 		
-		$req = "SELECT * FROM FICHIER WHERE PATHS = '".$path."'";
+		//$req = "SELECT * FROM FICHIER WHERE PATHS = '".$path."'";
+		$req = "SELECT * FROM FICHIER WHERE PATHS = :path";
 		$query = $this->db->prepare($req);
-		$query->execute();
+		$query->execute(array(':path' => $path));
 		$res = $query->fetchAll();
 		$infos = array();
 		
 		foreach($res as $r){
-			$infos['path'] = $r->PATHS;
-			$infos['idfic'] = $r->ID_FICHIER;
+			$infos['PATH'] = $r->PATHS;
+			$infos['ID_FICHIER'] = $r->ID_FICHIER;
 		}
 		if(count($res) > 0){
 			return $infos;
@@ -62,7 +63,7 @@ class NavigationModel
 	
 
 	
-	public function getServiceId($service){
+	public function getServiceId($service,$idUser = null){
 		$req = "SELECT * FROM FICHIER WHERE NOM = :service and parents = 0";
 		$query = $this->db->prepare($req);
 		$query->execute(array(':service' => $service));
@@ -70,10 +71,12 @@ class NavigationModel
 		$info = array();
 		foreach($res as $infos){
 			$info['ID_FICHIER'] = $infos->ID_FICHIER;
-			$info['nom'] = $infos->NOM;
+			$info['NOM'] = $infos->NOM;
 			$info['ID_USER'] = $infos->ID_USER;
 			$info['PATH'] = $infos->PATHS;
-			$info['PARENTS'] = $infos->PARENTS;
+			$info['PARENT'] = $infos->PARENTS;
+			$info['DOSSIER'] = $infos->DOSSIER;
+			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : 0;
 		}
 		if(count($res) > 0)
 			return $info;
@@ -82,7 +85,7 @@ class NavigationModel
 		
 	}
 	
-	public function getFilesInfoByParent($idfic){
+	public function getFilesInfoByParent($idfic,$idUser = null){
 		$req = "SELECT * FROM FICHIER WHERE parents = :idfic";
 		$query = $this->db->prepare($req);
 		$query->execute(array(':idfic' => $idfic));
@@ -90,11 +93,12 @@ class NavigationModel
 		$info = array();
 		foreach($res as $infos){
 			$info['ID_FICHIER'] = $infos->ID_FICHIER;
-			$info['nom'] = $infos->NOM;
+			$info['NOM'] = $infos->NOM;
 			$info['ID_USER'] = $infos->ID_USER;
 			$info['PATH'] = $infos->PATHS;
-			$info['PARENTS'] = $infos->PARENTS;
+			$info['PARENT'] = $infos->PARENTS;
 			$info['DOSSIER'] = $infos->DOSSIER;
+			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : 0;
 		}
 		if(count($res) > 0)
 			return $info;
@@ -111,10 +115,10 @@ class NavigationModel
 		$info = array();
 		foreach($res as $infos){
 			$info['ID_FICHIER'] = $infos->ID_FICHIER;
-			$info['nom'] = $infos->NOM;
+			$info['NOM'] = $infos->NOM;
 			$info['ID_USER'] = $infos->ID_USER;
 			$info['PATH'] = $infos->PATHS;
-			$info['PARENTS'] = $infos->PARENTS;
+			$info['PARENT'] = $infos->PARENTS;
 			$info['DOSSIER'] = $infos->DOSSIER;
 		}
 		if(count($res) > 0)
@@ -138,19 +142,21 @@ class NavigationModel
 			if(count($res)>0){
 				
 				foreach($res as $fic){
-					$fichiers[$i]['nom'] = $fic->NOM;
-					$fichiers[$i]['idfic'] = $fic->ID_FICHIER;
-					$fichiers[$i]['droit'] = $idUser != null ? NavigationModel::getDroit($idUser,$fic->ID_FICHIER) : 0;
-					$fichiers[$i]['desc'] = $fic->DESCRIPTION;
-					$fichiers[$i]['path'] = $fic->PATHS;
-					$fichiers[$i]['dossier'] = $fic->DOSSIER;
-					$fichiers[$i]['service'] = $fic->SERVICE;
-					$fichiers[$i]['parent'] = $fic->PARENTS;
+					$fichiers[$i]['NOM'] = $fic->NOM;
+					$fichiers[$i]['ID_FICHIER'] = $fic->ID_FICHIER;
+					$fichiers[$i]['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$fic->ID_FICHIER) : 0;
+					$fichiers[$i]['DESC'] = $fic->DESCRIPTION;
+					$fichiers[$i]['PATH'] = $fic->PATHS;
+					$fichiers[$i]['DOSSIER'] = $fic->DOSSIER;
+					$fichiers[$i]['SERVICE'] = $fic->SERVICE;
+					$fichiers[$i]['PARENT'] = $fic->PARENTS;
+					$fichiers[$i]['ID_USER'] = $fic->ID_USER;
 					$i+=1;
 				}
 			}
 			return $fichiers;
 		}
+		return 0;
 
 	}
 	
@@ -160,7 +166,7 @@ class NavigationModel
 			$query->execute(array(':iduser' => $idUser,':idfic' => $idFic));
 			$res = $query->fetchAll();
 			if(count($res)>0){
-				echo 'LOOOOOOOOOOOOL<br/>';
+				//echo 'LOOOOOOOOOOOOL<br/>';
 				foreach($res as $r){
 					return $r->ID_DROIT;
 				}
