@@ -1,4 +1,4 @@
-<?php
+<?php	
 
 define('USERS_TREE', 'ou=users,dc=projetsi,dc=com');
 define('SERVICES_TREE', 'ou=services,dc=projetsi,dc=com');
@@ -52,6 +52,7 @@ public  function Connexion($uid,$password)
 				echo "LDAP bind successful... Welcome ".$info[0]["mail"][0]."<br/>";
 				$_SESSION['cn'] = $info[0]["cn"][0];
 				$_SESSION['sn'] = $info[0]["sn"][0];
+				$_SESSION['mail'] = $info[0]["mail"][0];
 				$_SESSION['uid'] = $info[0]["uid"][0];
 				$_SESSION['mail'] = $info[0]["mail"][0];
 				$service = LdapModel::SearchServiceUtilisateur($uid);
@@ -116,7 +117,7 @@ public  function Connexion($uid,$password)
 			//Recherche si responsable de services
 			$result = ldap_search(
 					$ds,
-					'ou=responsables, '.$service,
+					'cn=Responsables, '.$service,
 					'(&(objectClass=groupOfUniqueNames)(uniqueMember=uid='.$uid.'))'
 			);
 			
@@ -129,6 +130,53 @@ public  function Connexion($uid,$password)
 			return 0;
 	}
 	
+	public function DelResponsableService($uid)
+	{
+		$ds=$this->ldapCon;
+
+		$group = SearchService($uid);
+		
+		if($group != 0)
+		{
+			$service = $group["dn"][0];
+			
+			//Recherche si responsable de services
+			$result = ldap_search(
+					$ds,
+					'cn=Responsables, '.$service,
+					'(&(objectClass=groupOfUniqueNames)(uniqueMember=uid='.$uid.'))'
+			);
+			
+			//Supprime l'utilisateur de la liste des responsable du service
+			$r = ldap_mod_del($ds, $group["dn"][0], $entry);
+		}
+		
+		if($r)
+			return true;
+		else
+			return false;
+	}
+	
+	public function AddResponsableService($uid, $dnService)
+	{
+		$ds=$this->ldapCon;
+
+		$group = SearchService($uid);
+		
+		$entry['uniqueMember'] = "uid=".$uid;
+		
+		//On supprime l'utilisateur des responsables de son ancien service si il était responsable
+		DelResponsableService($uid);
+		
+		//Ajoute l'utilisateur comme responsable du service
+		$r = ldap_mod_add($ds, 'cn=Responsables, '.$dnService, $entry);
+		
+		if($r)
+			return true;
+		else
+			return false;
+	}
+	
 	public function DelUtilisateurService($uid)
 	{
 		$ds=$this->ldapCon;
@@ -137,7 +185,7 @@ public  function Connexion($uid,$password)
 
 		$entry['uniqueMember'] = "uid=".$uid;
 		
-		//Ajoute l'utilisateur dans le service
+		//Supprime l'utilisateur dans le service
 		$r = ldap_mod_del($ds, $group["dn"][0], $entry);
 		
 		if($r)
@@ -159,6 +207,19 @@ public  function Connexion($uid,$password)
 
 		//Ajoute l'utilisateur dans le service
 		$r = ldap_mod_add($ds, $dnService, $entry);
+		
+		if($r)
+			return true;
+		else
+			return false;
+	}
+	
+	public function DelUser($uid)
+	{
+		$ds=$this->ldapCon;
+		
+		//Supprime l'utilisateur de la base des users
+		$r = ldap_delete($ds, "uid=".$uid.",".USERS_TREE);
 		
 		if($r)
 			return true;
@@ -246,5 +307,18 @@ public  function Connexion($uid,$password)
 			return 0;
 		else
 			return 1;
+	}
+	
+	public function DelService($nomService)
+	{
+		$ds=$this->ldapCon;
+		
+		//Supprime un service de la base des services
+		$r = ldap_delete($ds, "cn=".$nomService.",".SERVICES_TREE);
+		
+		if($r)
+			return true;
+		else
+			return false;
 	}
 }
