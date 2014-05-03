@@ -43,7 +43,7 @@ class NavigationModel
 		return $str;
 	}
 	
-	public function getIdFicByPath($path){
+	public function getIdFicByPath($path,$idUser = null){
 		
 		//$req = "SELECT * FROM FICHIER WHERE PATHS = '".$path."'";
 		$req = "SELECT * FROM FICHIER WHERE PATHS = :path";
@@ -55,6 +55,12 @@ class NavigationModel
 		foreach($res as $r){
 			$infos['PATH'] = $r->PATHS;
 			$infos['ID_FICHIER'] = $r->ID_FICHIER;
+			$infos['SERVICE'] = $r->SERVICE;
+			$infos['NOM'] = $r->NOM;
+			$infos['DOSSIER'] = $r->NOM;
+			$infos['PARENT'] = $r->PARENTS;
+			$infos['ID_USER'] = $r->ID_USER;
+			$infos['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$r->ID_FICHIER) : -1;
 		}
 		if(count($res) > 0){
 			return $infos;
@@ -64,7 +70,7 @@ class NavigationModel
 
 	
 	public function getServiceId($service,$idUser = null){
-		$req = "SELECT * FROM FICHIER WHERE NOM = :service and parents = 0";
+		$req = "SELECT * FROM FICHIER WHERE SERVICE = :service and parents = 0";
 		$query = $this->db->prepare($req);
 		$query->execute(array(':service' => $service));
 		$res = $query->fetchAll();
@@ -76,7 +82,8 @@ class NavigationModel
 			$info['PATH'] = $infos->PATHS;
 			$info['PARENT'] = $infos->PARENTS;
 			$info['DOSSIER'] = $infos->DOSSIER;
-			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : 0;
+			$info['SERVICE'] = $infos->SERVICE;
+			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : -1;
 		}
 		if(count($res) > 0)
 			return $info;
@@ -98,7 +105,8 @@ class NavigationModel
 			$info['PATH'] = $infos->PATHS;
 			$info['PARENT'] = $infos->PARENTS;
 			$info['DOSSIER'] = $infos->DOSSIER;
-			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : 0;
+			$info['SERVICE'] = $infos->SERVICE;
+			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : -1;
 		}
 		if(count($res) > 0)
 			return $info;
@@ -107,7 +115,7 @@ class NavigationModel
 		
 	}
 
-	public function getFilesInfoByIdFic($idfic){
+	public function getFilesInfoByIdFic($idfic,$idUser = null){
 		$req = "SELECT * FROM FICHIER WHERE ID_FICHIER = :idfic";
 		$query = $this->db->prepare($req);
 		$query->execute(array(':idfic' => $idfic));
@@ -120,6 +128,8 @@ class NavigationModel
 			$info['PATH'] = $infos->PATHS;
 			$info['PARENT'] = $infos->PARENTS;
 			$info['DOSSIER'] = $infos->DOSSIER;
+			$info['SERVICE'] = $infos->SERVICE;
+			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : -1;
 		}
 		if(count($res) > 0)
 			return $info;
@@ -144,7 +154,7 @@ class NavigationModel
 				foreach($res as $fic){
 					$fichiers[$i]['NOM'] = $fic->NOM;
 					$fichiers[$i]['ID_FICHIER'] = $fic->ID_FICHIER;
-					$fichiers[$i]['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$fic->ID_FICHIER) : 0;
+					$fichiers[$i]['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$fic->ID_FICHIER) : -1;
 					$fichiers[$i]['DESC'] = $fic->DESCRIPTION;
 					$fichiers[$i]['PATH'] = $fic->PATHS;
 					$fichiers[$i]['DOSSIER'] = $fic->DOSSIER;
@@ -166,7 +176,6 @@ class NavigationModel
 			$query->execute(array(':iduser' => $idUser,':idfic' => $idFic));
 			$res = $query->fetchAll();
 			if(count($res)>0){
-				//echo 'LOOOOOOOOOOOOL<br/>';
 				foreach($res as $r){
 					return $r->ID_DROIT;
 				}
