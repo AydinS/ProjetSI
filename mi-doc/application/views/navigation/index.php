@@ -75,7 +75,7 @@
 					}
 					else{//Ici on devrai bloquer l'acces au bouton les droits que possède l'utilisateur sur le fichier
 						//on récupère le droit via la variable : $fichiers[$i]['DROIT'] 
-						echo '<a href="'.$fichiers[$i]['PATH'].''.$fichiers[$i]['NOM'].'" class="btn btn-primary" role="button" download="'.$fichiers[$i]['NOM'].'">Download</a>&nbsp;&nbsp;&nbsp;';
+						echo '<a href="'.$fichiers[$i]['PATH'].'/'.$fichiers[$i]['NOM'].'" class="btn btn-primary" role="button" download="'.$fichiers[$i]['NOM'].'">Download</a>&nbsp;&nbsp;&nbsp;';
 						echo '<a href="'.$fichiers[$i]['PATH'].''.$fichiers[$i]['NOM'].'" class="btn btn-default" role="button">Upload</a>';
 					}
 					echo '<input type="hidden" name="idfic" value="'.$fichiers[$i]['ID_FICHIER'].'" class="btn btn-primary">';

@@ -20,6 +20,9 @@ class Connexion extends Controller
         // debug message to show where you are, just for the demo
         //echo 'test LDAAAP';
         // load views. within the views we can echo out $songs and $amount_of_songs easily
+		if(isset($_SESSION['uid']))
+			header('Location: '.URL.'navigation/index');
+		
         require 'application/views/_templates/header.php';
         
 		//$contactsModel = $this->loadModel('testLdapModel');
