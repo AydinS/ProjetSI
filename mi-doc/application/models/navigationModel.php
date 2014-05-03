@@ -141,7 +141,7 @@ class NavigationModel
 	public function getAllFilesByParents($idParents,$idUser = null,$path = null){
 		$fichiers = array();
 		$i = 0;
-		if($path == null){
+		
 			
 			$req = "SELECT * FROM FICHIER where PARENTS = :idparent";
 			$query = $this->db->prepare($req);
@@ -163,11 +163,38 @@ class NavigationModel
 					$fichiers[$i]['ID_USER'] = $fic->ID_USER;
 					$i+=1;
 				}
+				return $fichiers;
 			}
-			return $fichiers;
-		}
-		return 0;
+			else return 0;
+			
+	
 
+	}
+	
+	public function getAllSharedFolders($idUser){
+		$fichiers = array();
+		$i = 0;
+		$req = "SELECT * FROM FICHIER f, DROIT d where d.ID_USER = :iduser and d.ID_FICHIER = f.ID_FICHIER and f.DOSSIER = 1 and f.ID_USER <> d.ID_USER and d.DROIT = 1";
+		$query = $this->db->prepare($req);
+		$query->execute(array(':iduser' => $idUser));
+		$res = $query->fetchAll();
+		if(count($res)>0){
+				
+				foreach($res as $fic){
+					$fichiers[$i]['NOM'] = $fic->NOM;
+					$fichiers[$i]['ID_FICHIER'] = $fic->ID_FICHIER;
+					$fichiers[$i]['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$fic->ID_FICHIER) : -1;
+					$fichiers[$i]['DESC'] = $fic->DESCRIPTION;
+					$fichiers[$i]['PATH'] = $fic->PATHS;
+					$fichiers[$i]['DOSSIER'] = $fic->DOSSIER;
+					$fichiers[$i]['SERVICE'] = $fic->SERVICE;
+					$fichiers[$i]['PARENT'] = $fic->PARENTS;
+					$fichiers[$i]['ID_USER'] = $fic->ID_USER;
+					$i+=1;
+				}
+				return $fichiers;
+			}
+			else return 0;
 	}
 	
 	public function getDroit($idUser,$idFic){

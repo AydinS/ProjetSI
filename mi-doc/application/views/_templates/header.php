@@ -38,6 +38,7 @@
 						echo '<li style="color:green;">Bienvenu '.$_SESSION['cn'].'</li>';
 						echo '<li><a href="'.URL.'connexion/logout">Déconnexion</a></li>';
 						echo '<li><a href="'.URL.'navigation/index">Navigation</a>';
+						echo '<li><a href="'.URL.'navigation/displaySharedFiles">Dossiers partages</a>';
 					}
 				?>
                 <!--<li><a href="<?php //echo URL.'contacts/index'; ?>">Contacts</a>-->

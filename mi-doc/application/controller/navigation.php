@@ -19,7 +19,7 @@ class Navigation extends Controller
 				
 				$nomDossier = $navModel->getCurrentLocation(RACINE.$_SESSION['SERVICE'],$infoService['ID_FICHIER']);
 				
-				$fichiers = $navModel->getAllFilesByParents($infoService['ID_FICHIER']);
+				$fichiers = $navModel->getAllFilesByParents($infoService['ID_FICHIER'],$_SESSION['uid']);
 				$_SESSION['CURR_DIR_PATH'] = $path;
 				$_SESSION['CURR_DIR_ID'] = $infoService['ID_FICHIER'];
 			}
@@ -70,9 +70,22 @@ class Navigation extends Controller
 			
 			$path = __DIR__.'../../'.$_POST['gotodirectory'];
 			$nomDossier = $navModel->getCurrentLocation((string)$_POST['gotodirectory'],(int)$_POST['idfic']);
-			$fichiers = $navModel->getAllFilesByParents((int)$_POST['idfic']);
+			$fichiers = $navModel->getAllFilesByParents((int)$_POST['idfic'],$_SESSION['uid']);
 			$_SESSION['CURR_DIR_PATH'] = $path;
 			$_SESSION['CURR_DIR_ID'] = $_POST['idfic'];
+		}
+		require 'application/views/navigation/index.php';
+        require 'application/views/_templates/footer.php';
+	}
+	
+	public function displaySharedFiles(){
+		
+		require 'application/views/_templates/header.php';
+		if(isset($_SESSION['SERVICE']) and isset($_SESSION['uid'])){
+			$navModel = $this->loadModel('navigationmodel');
+			$nomDossier = array();
+			$nomDossier[0] = "Dossier partages";
+			$fichiers = $navModel->getAllSharedFolders($_SESSION['uid']);
 		}
 		require 'application/views/navigation/index.php';
         require 'application/views/_templates/footer.php';

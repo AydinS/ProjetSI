@@ -1,4 +1,4 @@
-<?php print_r($fichiers); ?>
+<?php //print_r($fichiers); ?>
 <div class="content-header">
     <h1>
         <a id="menu-toggle" href="#" class="btn btn-default"><i class="icon-reorder"></i></a>
@@ -61,30 +61,32 @@
 				$maxf = count($fichiers);
 				$str = "";
 				for($i = 0;$i<$maxf;$i++){
-					echo '<tr>';
-					echo '<td>'.$fichiers[$i]['ID_USER'].'</td>';
-					echo '<td>'.$fichiers[$i]['NOM'].'</td>';
-					echo '<td>'.$fichiers[$i]['DESC'].'</td>';
-					echo '<td>';
-					//btn ouvrir si dossier  et si droit :
-					
-					if($fichiers[$i]['DOSSIER'] == 1){//Si c'est un dossier un formulaire se chargera du bouton pour consulter le dossier
-						echo '<form action="'.URL.'navigation/gotodirectory" method="POST">';
-						//On devrait bloquer ce bouton si l'utilisateur n'a pas les droits, on récupère le droit via la variable $fichiers[$i]['DROIT']
-						echo '<button type="submit" name="gotodirectory" value="'.$fichiers[$i]['PATH'].'/'.$fichiers[$i]['NOM'].'" class="btn btn-primary" role="button">Ouvrir</button>';
+					if(trim($fichiers[$i]['NOM']) != ""){
+						echo '<tr>';
+						echo '<td>'.$fichiers[$i]['ID_USER'].'</td>';
+						echo '<td>'.$fichiers[$i]['NOM'].'</td>';
+						echo '<td>'.$fichiers[$i]['DESC'].'</td>';
+						echo '<td>';
+						//btn ouvrir si dossier  et si droit :
 						
+						if($fichiers[$i]['DOSSIER'] == 1){//Si c'est un dossier un formulaire se chargera du bouton pour consulter le dossier
+							echo '<form action="'.URL.'navigation/gotodirectory" method="POST">';
+							//On devrait bloquer ce bouton si l'utilisateur n'a pas les droits, on récupère le droit via la variable $fichiers[$i]['DROIT']
+							echo '<button type="submit" name="gotodirectory" value="'.$fichiers[$i]['PATH'].'/'.$fichiers[$i]['NOM'].'" class="btn btn-primary" role="button">Ouvrir</button>';
+							
+						}
+						else{//Ici on devrai bloquer l'acces au bouton les droits que possède l'utilisateur sur le fichier
+							//on récupère le droit via la variable : $fichiers[$i]['DROIT'] 
+							echo '<a href="'.$fichiers[$i]['PATH'].'/'.$fichiers[$i]['NOM'].'" class="btn btn-primary" role="button" download="'.$fichiers[$i]['NOM'].'">Download</a>&nbsp;&nbsp;&nbsp;';
+							echo '<a href="'.$fichiers[$i]['PATH'].''.$fichiers[$i]['NOM'].'" class="btn btn-default" role="button">Upload</a>';
+						}
+						echo '<input type="hidden" name="idfic" value="'.$fichiers[$i]['ID_FICHIER'].'" class="btn btn-primary">';
+						if($fichiers[$i]['DOSSIER'] == 1){//On ferme le formulaire
+							echo '</form>';
+						}
+						echo '</td>';
+						echo '</tr>';
 					}
-					else{//Ici on devrai bloquer l'acces au bouton les droits que possède l'utilisateur sur le fichier
-						//on récupère le droit via la variable : $fichiers[$i]['DROIT'] 
-						echo '<a href="'.$fichiers[$i]['PATH'].'/'.$fichiers[$i]['NOM'].'" class="btn btn-primary" role="button" download="'.$fichiers[$i]['NOM'].'">Download</a>&nbsp;&nbsp;&nbsp;';
-						echo '<a href="'.$fichiers[$i]['PATH'].''.$fichiers[$i]['NOM'].'" class="btn btn-default" role="button">Upload</a>';
-					}
-					echo '<input type="hidden" name="idfic" value="'.$fichiers[$i]['ID_FICHIER'].'" class="btn btn-primary">';
-					if($fichiers[$i]['DOSSIER'] == 1){//On ferme le formulaire
-						echo '</form>';
-					}
-					echo '</td>';
-					echo '</tr>';
 				}
 				
 				//echo $fichiers;
