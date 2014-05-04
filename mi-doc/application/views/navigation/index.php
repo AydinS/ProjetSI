@@ -87,7 +87,7 @@
 						else{//Ici on devrai bloquer l'acces au bouton les droits que possède l'utilisateur sur le fichier
 							//on récupère le droit via la variable : $fichiers[$i]['DROIT']
 							if($fichiers[$i]['DROIT'] >= LECTURE)		
-								echo '<a href="'.$fichiers[$i]['PATH'].'/'.$fichiers[$i]['NOM'].'" class="btn btn-primary" role="button" download="'.$fichiers[$i]['NOM'].'"><span class="glyphicon glyphicon-cloud-download"></span>&nbsp;Download</a>&nbsp;&nbsp;&nbsp;';
+								echo '<a href="'.URL.'application/'.$fichiers[$i]['PATH'].'/'.$fichiers[$i]['NOM'].'" class="btn btn-primary" role="button"  download="'.$fichiers[$i]['NOM'].'"><span class="glyphicon glyphicon-cloud-download"></span>&nbsp;Download</a>&nbsp;&nbsp;&nbsp;';
 							if($fichiers[$i]['DROIT'] == MODIF)	
 								echo '<a href="'.$fichiers[$i]['PATH'].''.$fichiers[$i]['NOM'].'" class="btn btn-default" role="button"><span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;Upload</a>';
 						}
