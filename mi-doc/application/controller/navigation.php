@@ -50,7 +50,7 @@ class Navigation extends Controller
 			$nomDossier = $navModel->getCurrentLocation($infoService['PATH'],$idfic);//
 			$fichiers = $navModel->getAllFilesByParents($infoService['PARENT'],$_SESSION['uid']);	
 			$_SESSION['CURR_DIR_PATH'] = $path;
-			$_SESSION['CURR_DIR_ID'] = $idfic;
+			$_SESSION['CURR_DIR_ID'] = $infoService['PARENT'];
 			$droit = $navModel->getDroit($_SESSION['uid'],$idfic);
 		}
 		require 'application/views/navigation/index.php';

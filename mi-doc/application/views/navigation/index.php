@@ -41,8 +41,8 @@
 				</ol>
 				<?php 
 					//Ici on teste si l'utilisateur à les droits de modification, si oui, on affiche les boutons d'upload et de création de dossier
-					if(isset($_SESSION['CURR_DIR_ID']) and isset($droit) and $droit == MODIF) {echo '<a href="'.URL.'upload/uploadto/'.$_SESSION['CURR_DIR_ID'].'" class="btn btn-default" role="button">Upload</a>&nbsp;&nbsp;&nbsp;';}
-					if(isset($_SESSION['CURR_DIR_ID']) and isset($droit) and $droit == MODIF) {echo '<a href="'.URL.'navigation/createDir/'.$_SESSION['CURR_DIR_ID'].'" class="btn btn-success" role="button">Creer dossier</a> <br/>';}
+					if(isset($_SESSION['CURR_DIR_ID']) and isset($droit) and $droit == MODIF) {echo '<a href="'.URL.'upload/uploadto/'.$_SESSION['CURR_DIR_ID'].'" class="btn btn-default" role="button"><span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;Upload</a>&nbsp;&nbsp;&nbsp;';}
+					if(isset($_SESSION['CURR_DIR_ID']) and isset($droit) and $droit == MODIF) {echo '<a href="'.URL.'navigation/createDir/'.$_SESSION['CURR_DIR_ID'].'" class="btn btn-success" role="button"><span class="glyphicon glyphicon-plus"></span>&nbsp;Creer dossier</a> <br/>';}
 					else echo'<br/>';
 				?>
                 <!--<h3 class="panel-title">Fichiers</h3>-->
@@ -81,15 +81,15 @@
 						if($fichiers[$i]['DOSSIER'] == 1 and $fichiers[$i]['DROIT'] >= LECTURE){//Si c'est un dossier un formulaire se chargera du bouton pour consulter le dossier
 							echo '<form action="'.URL.'navigation/gotodirectory" method="POST">';
 							//On devrait bloquer ce bouton si l'utilisateur n'a pas les droits, on récupère le droit via la variable $fichiers[$i]['DROIT']
-							echo '<button type="submit" name="gotodirectory" value="'.$fichiers[$i]['PATH'].'/'.$fichiers[$i]['NOM'].'" class="btn btn-primary" role="button">Ouvrir</button>';
+							echo '<button type="submit" name="gotodirectory" value="'.$fichiers[$i]['PATH'].'/'.$fichiers[$i]['NOM'].'" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-folder-open"></span>&nbsp; Ouvrir</button>';
 							
 						}
 						else{//Ici on devrai bloquer l'acces au bouton les droits que possède l'utilisateur sur le fichier
 							//on récupère le droit via la variable : $fichiers[$i]['DROIT']
 							if($fichiers[$i]['DROIT'] >= LECTURE)		
-								echo '<a href="'.$fichiers[$i]['PATH'].'/'.$fichiers[$i]['NOM'].'" class="btn btn-primary" role="button" download="'.$fichiers[$i]['NOM'].'">Download</a>&nbsp;&nbsp;&nbsp;';
+								echo '<a href="'.$fichiers[$i]['PATH'].'/'.$fichiers[$i]['NOM'].'" class="btn btn-primary" role="button" download="'.$fichiers[$i]['NOM'].'"><span class="glyphicon glyphicon-cloud-download"></span>&nbsp;Download</a>&nbsp;&nbsp;&nbsp;';
 							if($fichiers[$i]['DROIT'] == MODIF)	
-								echo '<a href="'.$fichiers[$i]['PATH'].''.$fichiers[$i]['NOM'].'" class="btn btn-default" role="button">Upload</a>';
+								echo '<a href="'.$fichiers[$i]['PATH'].''.$fichiers[$i]['NOM'].'" class="btn btn-default" role="button"><span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;Upload</a>';
 						}
 						echo '<input type="hidden" name="idfic" value="'.$fichiers[$i]['ID_FICHIER'].'" class="btn btn-primary">';
 						if($fichiers[$i]['DOSSIER'] == 1){//On ferme le formulaire
