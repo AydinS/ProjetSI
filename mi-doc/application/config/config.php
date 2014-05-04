@@ -41,7 +41,16 @@ define('LDAP_RDN', 'uid=admin,ou=system');
 define('LDAP_PASS', 'secret');
 
 /**
-*
-*Dossier où serons créés les dossier racines des services
-*/
+ *
+ * Dossier où serons créés les dossier racines des services
+ */
 define('RACINE','services/');
+
+/**
+ *
+ * Constantes qui définissent les différents droits possibles sur les fichiers
+ */
+ 
+define('LECTURE','1');
+define('MODIF','2');
+define('RW_NAV','2');//constante pour les tests

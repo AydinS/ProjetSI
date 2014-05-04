@@ -60,7 +60,7 @@ class NavigationModel
 			$infos['DOSSIER'] = $r->NOM;
 			$infos['PARENT'] = $r->PARENTS;
 			$infos['ID_USER'] = $r->ID_USER;
-			$infos['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$r->ID_FICHIER) : -1;
+			$infos['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$r->ID_FICHIER) : RW_NAV;
 		}
 		if(count($res) > 0){
 			return $infos;
@@ -83,7 +83,7 @@ class NavigationModel
 			$info['PARENT'] = $infos->PARENTS;
 			$info['DOSSIER'] = $infos->DOSSIER;
 			$info['SERVICE'] = $infos->SERVICE;
-			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : -1;
+			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : RW_NAV;
 		}
 		if(count($res) > 0)
 			return $info;
@@ -106,7 +106,7 @@ class NavigationModel
 			$info['PARENT'] = $infos->PARENTS;
 			$info['DOSSIER'] = $infos->DOSSIER;
 			$info['SERVICE'] = $infos->SERVICE;
-			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : -1;
+			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : RW_NAV;
 		}
 		if(count($res) > 0)
 			return $info;
@@ -129,7 +129,7 @@ class NavigationModel
 			$info['PARENT'] = $infos->PARENTS;
 			$info['DOSSIER'] = $infos->DOSSIER;
 			$info['SERVICE'] = $infos->SERVICE;
-			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : -1;
+			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : RW_NAV;
 		}
 		if(count($res) > 0)
 			return $info;
@@ -154,7 +154,7 @@ class NavigationModel
 				foreach($res as $fic){
 					$fichiers[$i]['NOM'] = $fic->NOM;
 					$fichiers[$i]['ID_FICHIER'] = $fic->ID_FICHIER;
-					$fichiers[$i]['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$fic->ID_FICHIER) : -1;
+					$fichiers[$i]['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$fic->ID_FICHIER) : RW_NAV;
 					$fichiers[$i]['DESC'] = $fic->DESCRIPTION;
 					$fichiers[$i]['PATH'] = $fic->PATHS;
 					$fichiers[$i]['DOSSIER'] = $fic->DOSSIER;
@@ -174,7 +174,7 @@ class NavigationModel
 	public function getAllSharedFolders($idUser){
 		$fichiers = array();
 		$i = 0;
-		$req = "SELECT * FROM FICHIER f, DROIT d where d.ID_USER = :iduser and d.ID_FICHIER = f.ID_FICHIER and f.DOSSIER = 1 and f.ID_USER <> d.ID_USER and d.DROIT = 1";
+		$req = "SELECT * FROM FICHIER f, DROIT d where d.ID_USER = :iduser and d.ID_FICHIER = f.ID_FICHIER and f.DOSSIER = 1 and f.ID_USER <> d.ID_USER and d.DROIT = ".LECTURE."";
 		$query = $this->db->prepare($req);
 		$query->execute(array(':iduser' => $idUser));
 		$res = $query->fetchAll();
@@ -183,7 +183,7 @@ class NavigationModel
 				foreach($res as $fic){
 					$fichiers[$i]['NOM'] = $fic->NOM;
 					$fichiers[$i]['ID_FICHIER'] = $fic->ID_FICHIER;
-					$fichiers[$i]['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$fic->ID_FICHIER) : -1;
+					$fichiers[$i]['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$fic->ID_FICHIER) : RW_NAV;
 					$fichiers[$i]['DESC'] = $fic->DESCRIPTION;
 					$fichiers[$i]['PATH'] = $fic->PATHS;
 					$fichiers[$i]['DOSSIER'] = $fic->DOSSIER;
@@ -207,7 +207,7 @@ class NavigationModel
 					return $r->ID_DROIT;
 				}
 			}
-			else return -1;
+			else return RW_NAV;
 	
 	}
 

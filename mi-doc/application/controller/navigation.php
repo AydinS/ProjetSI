@@ -22,6 +22,7 @@ class Navigation extends Controller
 				$fichiers = $navModel->getAllFilesByParents($infoService['ID_FICHIER'],$_SESSION['uid']);
 				$_SESSION['CURR_DIR_PATH'] = $path;
 				$_SESSION['CURR_DIR_ID'] = $infoService['ID_FICHIER'];
+				$droit = $navModel->getDroit($_SESSION['uid'],$_SESSION['CURR_DIR_ID']);
 			}
 			
 		}
@@ -50,6 +51,7 @@ class Navigation extends Controller
 			$fichiers = $navModel->getAllFilesByParents($infoService['PARENT'],$_SESSION['uid']);	
 			$_SESSION['CURR_DIR_PATH'] = $path;
 			$_SESSION['CURR_DIR_ID'] = $idfic;
+			$droit = $navModel->getDroit($_SESSION['uid'],$idfic);
 		}
 		require 'application/views/navigation/index.php';
         require 'application/views/_templates/footer.php';
@@ -73,6 +75,7 @@ class Navigation extends Controller
 			$fichiers = $navModel->getAllFilesByParents((int)$_POST['idfic'],$_SESSION['uid']);
 			$_SESSION['CURR_DIR_PATH'] = $path;
 			$_SESSION['CURR_DIR_ID'] = $_POST['idfic'];
+			$droit = $navModel->getDroit($_SESSION['uid'],$_POST['idfic']);
 		}
 		require 'application/views/navigation/index.php';
         require 'application/views/_templates/footer.php';
@@ -86,6 +89,7 @@ class Navigation extends Controller
 			$nomDossier = array();
 			$nomDossier[0] = "Dossier partages";
 			$fichiers = $navModel->getAllSharedFolders($_SESSION['uid']);
+			
 		}
 		require 'application/views/navigation/index.php';
         require 'application/views/_templates/footer.php';
