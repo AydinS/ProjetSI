@@ -41,8 +41,8 @@
 				</ol>
 				<?php 
 					//Ici on teste si l'utilisateur à les droits de modification, si oui, on affiche les boutons d'upload et de création de dossier
-					if($droit != BLOCK and (isset($_SESSION['CURR_DIR_ID']) and isset($droit) and $droit == MODIF) || (isset($_SESSION['SERVICE']) && isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['SERVICE'] == $_SESSION['CURR_DIR_SERVICE'])) {echo '<a href="'.URL.'upload/uploadto/'.$_SESSION['CURR_DIR_ID'].'" class="btn btn-default" role="button"><span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;Upload</a>&nbsp;&nbsp;&nbsp;';}
-					if($droit != BLOCK and (isset($_SESSION['CURR_DIR_ID']) and isset($droit) and $droit == MODIF) || (isset($_SESSION['SERVICE']) && isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['SERVICE'] == $_SESSION['CURR_DIR_SERVICE'])) {echo '<a href="'.URL.'navigation/createDir/'.$_SESSION['CURR_DIR_ID'].'" class="btn btn-success" role="button"><span class="glyphicon glyphicon-plus"></span>&nbsp;Creer dossier</a> <br/>';}
+					if(isset($droit) and $droit != BLOCK and (isset($_SESSION['CURR_DIR_ID']) and isset($droit) and $droit == MODIF) || (isset($_SESSION['SERVICE']) && isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['SERVICE'] == $_SESSION['CURR_DIR_SERVICE'])) {echo '<a href="'.URL.'upload/uploadto/'.$_SESSION['CURR_DIR_ID'].'" class="btn btn-default" role="button"><span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;Upload</a>&nbsp;&nbsp;&nbsp;';}
+					if(isset($droit) and $droit != BLOCK and (isset($_SESSION['CURR_DIR_ID']) and isset($droit) and $droit == MODIF) || (isset($_SESSION['SERVICE']) && isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['SERVICE'] == $_SESSION['CURR_DIR_SERVICE'])) {echo '<a href="'.URL.'navigation/createDir/'.$_SESSION['CURR_DIR_ID'].'" class="btn btn-success" role="button"><span class="glyphicon glyphicon-plus"></span>&nbsp;Creer dossier</a> <br/>';}
 					else echo'<br/>';
 				?>
                 <!--<h3 class="panel-title">Fichiers</h3>-->
