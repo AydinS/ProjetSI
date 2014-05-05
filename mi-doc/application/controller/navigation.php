@@ -22,6 +22,8 @@ class Navigation extends Controller
 				$fichiers = $navModel->getAllFilesByParents($infoService['ID_FICHIER'],$_SESSION['uid']);
 				$_SESSION['CURR_DIR_PATH'] = $path;
 				$_SESSION['CURR_DIR_ID'] = $infoService['ID_FICHIER'];
+				$_SESSION['CURR_DIR_SERVICE'] = $infoService['SERVICE'];
+				$_SESSION['CURR_DIR_OWNER'] = $infoService['ID_USER'];
 				$droit = $navModel->getDroit($_SESSION['uid'],$_SESSION['CURR_DIR_ID']);
 			}
 			
@@ -51,7 +53,9 @@ class Navigation extends Controller
 			$fichiers = $navModel->getAllFilesByParents($infoService['PARENT'],$_SESSION['uid']);	
 			$_SESSION['CURR_DIR_PATH'] = $path;
 			$_SESSION['CURR_DIR_ID'] = $infoService['PARENT'];
-			$droit = $navModel->getDroit($_SESSION['uid'],$idfic);
+			$_SESSION['CURR_DIR_SERVICE'] = $infoService['SERVICE'];
+			$_SESSION['CURR_DIR_OWNER'] = $infoService['ID_USER'];
+			$droit = $navModel->getDroit($_SESSION['uid'],$infoService['PARENT']);
 		}
 		require 'application/views/navigation/index.php';
         require 'application/views/_templates/footer.php';
@@ -75,6 +79,8 @@ class Navigation extends Controller
 			$fichiers = $navModel->getAllFilesByParents((int)$_POST['idfic'],$_SESSION['uid']);
 			$_SESSION['CURR_DIR_PATH'] = $path;
 			$_SESSION['CURR_DIR_ID'] = $_POST['idfic'];
+			$_SESSION['CURR_DIR_SERVICE'] = $infoService['SERVICE'];
+			$_SESSION['CURR_DIR_OWNER'] = $infoService['ID_USER'];
 			$droit = $navModel->getDroit($_SESSION['uid'],$_POST['idfic']);
 		}
 		require 'application/views/navigation/index.php';
@@ -85,6 +91,10 @@ class Navigation extends Controller
 		
 		require 'application/views/_templates/header.php';
 		if(isset($_SESSION['SERVICE']) and isset($_SESSION['uid'])){
+			$_SESSION['CURR_DIR_PATH'] = "";
+			$_SESSION['CURR_DIR_ID'] = "";
+			$_SESSION['CURR_DIR_SERVICE'] = "";
+			$_SESSION['CURR_DIR_OWNER'] = "";
 			$navModel = $this->loadModel('navigationmodel');
 			$nomDossier = array();
 			$nomDossier[0] = "Dossier partages";

@@ -174,7 +174,7 @@ class NavigationModel
 	public function getAllSharedFolders($idUser){
 		$fichiers = array();
 		$i = 0;
-		$req = "SELECT * FROM FICHIER f, DROIT d where d.ID_USER = :iduser and d.ID_FICHIER = f.ID_FICHIER and f.DOSSIER = 1 and f.ID_USER <> d.ID_USER and d.DROIT = ".LECTURE."";
+		$req = "SELECT * FROM FICHIER f, DROIT d where d.ID_USER = :iduser and d.ID_FICHIER = f.ID_FICHIER and f.DOSSIER = 1 and f.ID_USER <> d.ID_USER and d.DROIT >= ".LECTURE."";
 		$query = $this->db->prepare($req);
 		$query->execute(array(':iduser' => $idUser));
 		$res = $query->fetchAll();
@@ -204,7 +204,7 @@ class NavigationModel
 			$res = $query->fetchAll();
 			if(count($res)>0){
 				foreach($res as $r){
-					return $r->ID_DROIT;
+					return $r->DROIT;
 				}
 			}
 			else return RW_NAV;

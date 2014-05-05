@@ -1,13 +1,9 @@
 --------------------------------------------------------
---  Fichier créé - dimanche-mai-04-2014   
+--  Fichier créé - lundi-mai-05-2014   
 --------------------------------------------------------
-REM INSERTING into PROJETSI.DROIT
-SET DEFINE OFF;
-Insert into PROJETSI.DROIT (ID_DROIT,ID_USER,ID_FICHIER,DROIT) values ('1','madecalf','74','1');
-Insert into PROJETSI.DROIT (ID_DROIT,ID_USER,ID_FICHIER,DROIT) values ('2','madecalf','76','1');
 REM INSERTING into PROJETSI.FICHIER
 SET DEFINE OFF;
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('59','madecalf','L3App','L3App','Dossier des L3App','services','1','L3App','0');
+Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('59','admin','L3App','L3App','Dossier des L3App','services','1','L3App','0');
 Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('60','madecalf','Marketing Mix','Marketing Mix','Cours de Maketing Mix','services/L3App','1','L3App','59');
 Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('61','siaydin','Reglement L3App','Reglement_L3App.doc','Reglement du service L3App','services/L3App','0','L3App','59');
 Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('62','siaydin','Résultats net financiers','Resultats_net.xlsx','Resultats de l''entreprise','services/L3App','0','L3App','59');
@@ -25,4 +21,13 @@ Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,D
 Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('76','admin','PRojets des M1 app','Projets','Projets des M1App','services/M1App','1','M1App','75');
 Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('77','admin','Projet de C pour les M1App','projet_c.c','Projet de c des M1App','services/M1App/Projets','0','M1App','76');
 Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('78','admin','Liste des eleves de M1App','liste_eleves_m1.doc','Listes des eleves de M1App','services/M1App','0','M1App','75');
+Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('79','madecalf','Dossier perso','Dossier perso','Dossier perso test','services/L3App','1','L3App','59');
 Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('0',' ',' ',' ',' ',' ','0',' ','0');
+REM INSERTING into PROJETSI.DROIT
+SET DEFINE OFF;
+Insert into PROJETSI.DROIT (ID_DROIT,ID_USER,ID_FICHIER,DROIT) values ('1','madecalf','74','1');
+Insert into PROJETSI.DROIT (ID_DROIT,ID_USER,ID_FICHIER,DROIT) values ('2','madecalf','76','1');
+Insert into PROJETSI.DROIT (ID_DROIT,ID_USER,ID_FICHIER,DROIT) values ('3','madecalf','61','1');
+Insert into PROJETSI.DROIT (ID_DROIT,ID_USER,ID_FICHIER,DROIT) values ('4','madecalf','77','1');
+Insert into PROJETSI.DROIT (ID_DROIT,ID_USER,ID_FICHIER,DROIT) values ('5','madecalf','63','1');
+Insert into PROJETSI.DROIT (ID_DROIT,ID_USER,ID_FICHIER,DROIT) values ('6','madecalf','59','-2');

@@ -53,4 +53,5 @@ define('RACINE','services/');
  
 define('LECTURE','1');
 define('MODIF','2');
-define('RW_NAV','2');//constante pour les tests
+define('BLOCK','-2');//Bloque un dossier à un utilisateur de son service
+define('RW_NAV','-1');//constante pour les tests
