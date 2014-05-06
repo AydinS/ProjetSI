@@ -40,9 +40,9 @@
 			?> 
 				</ol>
 				<?php 
-					//Ici on teste si l'utilisateur à les droits de modification, si oui, on affiche les boutons d'upload et de création de dossier
-					if(isset($droit) and $droit != BLOCK and (isset($_SESSION['CURR_DIR_ID']) and isset($droit) and $droit == MODIF) || (isset($_SESSION['SERVICE']) && isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['SERVICE'] == $_SESSION['CURR_DIR_SERVICE'])) {echo '<a href="'.URL.'upload/uploadto/'.$_SESSION['CURR_DIR_ID'].'" class="btn btn-default" role="button"><span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;Upload</a>&nbsp;&nbsp;&nbsp;';}
-					if(isset($droit) and $droit != BLOCK and (isset($_SESSION['CURR_DIR_ID']) and isset($droit) and $droit == MODIF) || (isset($_SESSION['SERVICE']) && isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['SERVICE'] == $_SESSION['CURR_DIR_SERVICE'])) {echo '<a href="'.URL.'navigation/createDir/'.$_SESSION['CURR_DIR_ID'].'" class="btn btn-success" role="button"><span class="glyphicon glyphicon-plus"></span>&nbsp;Creer dossier</a> <br/>';}
+					//Affichages des boutons de création et d'upload dans le dossier courant
+					if((isset($_SESSION['RESPONSABLE']) and $_SESSION['RESPONSABLE'] == true and isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['CURR_DIR_SERVICE'] == $_SESSION['SERVICE']) || (isset($droit) and $droit != BLOCK and (isset($_SESSION['CURR_DIR_ID']) and isset($droit) and $droit == MODIF) || (isset($_SESSION['SERVICE']) && isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['SERVICE'] == $_SESSION['CURR_DIR_SERVICE']))) {echo '<a href="'.URL.'upload/uploadto/'.$_SESSION['CURR_DIR_ID'].'" class="btn btn-default" role="button"><span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;Upload</a>&nbsp;&nbsp;&nbsp;';}
+					if((isset($_SESSION['RESPONSABLE']) and $_SESSION['RESPONSABLE'] == true and isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['CURR_DIR_SERVICE'] == $_SESSION['SERVICE']) || (isset($droit) and $droit != BLOCK and (isset($_SESSION['CURR_DIR_ID']) and isset($droit) and $droit == MODIF) || (isset($_SESSION['SERVICE']) && isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['SERVICE'] == $_SESSION['CURR_DIR_SERVICE']))) {echo '<a href="'.URL.'navigation/createDir/'.$_SESSION['CURR_DIR_ID'].'" class="btn btn-success" role="button"><span class="glyphicon glyphicon-plus"></span>&nbsp;Creer dossier</a> <br/>';}
 					else echo'<br/>';
 				?>
                 <!--<h3 class="panel-title">Fichiers</h3>-->
@@ -71,28 +71,47 @@
 				$str = "";
 				for($i = 0;$i<$maxf;$i++){
 					if(trim($fichiers[$i]['NOM']) != ""){
+						//Affichage des informations sur le ième fichier
 						echo '<tr>';
 						echo '<td>'.$fichiers[$i]['ID_USER'].'</td>';
 						echo '<td>'.$fichiers[$i]['NOM'].'</td>';
 						echo '<td>'.$fichiers[$i]['DESC'].'</td>';
 						echo '<td>';
-						//btn ouvrir si dossier  et si droit :
 						
-						if($fichiers[$i]['DOSSIER'] == 1 and ($fichiers[$i]['DROIT'] > BLOCK || $fichiers[$i]['ID_USER'] == $_SESSION['uid'])){//Si c'est un dossier un formulaire se chargera du bouton pour consulter le dossier
+						//Affichage du bouton ouvrir pour un dossier
+						if($fichiers[$i]['DOSSIER'] == 1 and ((isset($_SESSION['RESPONSABLE']) and $_SESSION['RESPONSABLE'] == true  and isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['CURR_DIR_SERVICE'] == $_SESSION['SERVICE']) || ($fichiers[$i]['DROIT'] > BLOCK || $fichiers[$i]['ID_USER'] == $_SESSION['uid']))){//Si c'est un dossier un formulaire se chargera du bouton pour consulter le dossier
 							echo '<form action="'.URL.'navigation/gotodirectory" method="POST">';
 							//On devrait bloquer ce bouton si l'utilisateur n'a pas les droits, on récupère le droit via la variable $fichiers[$i]['DROIT']
 							echo '<button type="submit" name="gotodirectory" value="'.$fichiers[$i]['PATH'].'/'.$fichiers[$i]['NOM'].'" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-folder-open"></span>&nbsp; Ouvrir</button>';
 							
 						}
-						else{//Ici on devrai bloquer l'acces au bouton les droits que possède l'utilisateur sur le fichier
-							//on récupère le droit via la variable : $fichiers[$i]['DROIT']
-							if($fichiers[$i]['DROIT'] >= LECTURE || (isset($_SESSION['SERVICE']) && isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['SERVICE'] == $_SESSION['CURR_DIR_SERVICE']))		
+						else{//Affichage des boutons de download et d'upload :
+							if((isset($_SESSION['RESPONSABLE']) and $_SESSION['RESPONSABLE'] == true and isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['CURR_DIR_SERVICE'] == $_SESSION['SERVICE']) || ($fichiers[$i]['DROIT'] >= LECTURE || (isset($_SESSION['SERVICE']) && isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['SERVICE'] == $_SESSION['CURR_DIR_SERVICE'])))		
 								echo '<a href="'.URL.'application/'.$fichiers[$i]['PATH'].'/'.$fichiers[$i]['NOM'].'" class="btn btn-primary" role="button"  download="'.$fichiers[$i]['NOM'].'"><span class="glyphicon glyphicon-cloud-download"></span>&nbsp;Download</a>&nbsp;&nbsp;&nbsp;';
-							if($fichiers[$i]['DROIT'] == MODIF || $fichiers[$i]['ID_USER'] == $_SESSION['uid'])	
+							if((isset($_SESSION['RESPONSABLE']) and $_SESSION['RESPONSABLE'] == true and isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['CURR_DIR_SERVICE'] == $_SESSION['SERVICE']) || ($fichiers[$i]['DROIT'] == MODIF || $fichiers[$i]['ID_USER'] == $_SESSION['uid']))	
 								echo '<a href="'.$fichiers[$i]['PATH'].''.$fichiers[$i]['NOM'].'" class="btn btn-default" role="button"><span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;Upload</a>';
 						}
 						echo '<input type="hidden" name="idfic" value="'.$fichiers[$i]['ID_FICHIER'].'" class="btn btn-primary">';
 						if($fichiers[$i]['DOSSIER'] == 1){//On ferme le formulaire
+							echo '</form>';
+						}
+						
+						echo '</td>';
+						echo '<td>';
+						//Boutons de suppression :
+						if(isset($_SESSION['RESPONSABLE']))
+						{
+							echo '<form action="'.URL.'navigation/DeleteFileNavigation" method="POST">';
+							echo '<input type="hidden" name="idfic" value="'.$fichiers[$i]['ID_FICHIER'].'">';
+							echo '<button type="submit" name="gotodirectory" value="'.$fichiers[$i]['ID_FICHIER'].'" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-remove"></span>&nbsp; Supprimer</button>';
+							echo '</form>';
+						}
+						
+						if($fichiers[$i]['ID_USER'] == $_SESSION['uid'] && $_SESSION['RESPONSABLE'] != 1)
+						{
+							echo '<form action="'.URL.'navigation/DeleteFileNavigation" method="POST">';
+							echo '<input type="hidden" name="idfic" value="'.$fichiers[$i]['ID_FICHIER'].'">';
+							echo '<button type="submit" name="gotodirectory" value="'.$fichiers[$i]['ID_FICHIER'].'" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-remove"></span>&nbsp; Supprimer</button>';
 							echo '</form>';
 						}
 						echo '</td>';

@@ -208,8 +208,15 @@ class NavigationModel
 				}
 			}
 			else return RW_NAV;
-	
 	}
-
 	
+	public function DeleteFile($idUser, $idFile){
+	echo "Fichier = $idFile<br>";
+			if($idUser == 1) $req = "DELETE FROM FICHIER WHERE ID_FICHIER = :idFile";
+			else $req = "DELETE FROM FICHIER WHERE ID_USER = :iduser and ID_FICHIER = :idFile";
+			
+			$query = $this->db->prepare($req);
+			if($idUser == 1) $query->execute(array(':idFile' => $idFile));
+			else $query->execute(array(':iduser' => $idUser,':idFile' => $idFile));
+	}
 }

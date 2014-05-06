@@ -36,7 +36,7 @@ class Navigation extends Controller
 	
 	/**
 	* Fonction appellée quand on clique sur un dossier de la liste de fichiers
-	*
+	* Fonction va se rendre dans le parent du fichier qui a pour ID idfic
 	*/
 	public function displaycontent($idfic){
 		require 'application/views/_templates/header.php';
@@ -64,7 +64,7 @@ class Navigation extends Controller
 	
 	/**
 	* Fonction appellée quand on clique sur un dossier qui compose le chemin vers le dossier courant 
-	*
+	* 	
 	*/
 	public function goToDirectory(){
 		
@@ -87,6 +87,35 @@ class Navigation extends Controller
         require 'application/views/_templates/footer.php';
 	}
 	
+	/**
+	* Fonction appellée pour aller vers le dosssier d'ID idDossier
+	* 
+	*/
+	public function goToFolder($idDossier){
+		
+		require 'application/views/_templates/header.php';
+		if(isset($idDossier)){
+			$navModel = $this->loadModel('navigationmodel');
+			$infoService = $navModel->getFilesInfoByIdFic($idDossier,$_SESSION['uid']);
+			//ici on teste si l'utilisateur à les droits sur le fichier d'id idfic et s'il n'a pas les droits on le redirige on sort de la fonction par un return
+			
+			$path = __DIR__.'../../'.$infoService['PATH'].'/'.$infoService['NOM'];
+			$nomDossier = $navModel->getCurrentLocation((string)$infoService['PATH'].'/'.$infoService['NOM'],$idDossier);
+			$fichiers = $navModel->getAllFilesByParents((int)$idDossier,$_SESSION['uid']);
+			$_SESSION['CURR_DIR_PATH'] = $path;
+			$_SESSION['CURR_DIR_ID'] = $idDossier;
+			$_SESSION['CURR_DIR_SERVICE'] = $infoService['SERVICE'];
+			$_SESSION['CURR_DIR_OWNER'] = $infoService['ID_USER'];
+			$droit = $navModel->getDroit($_SESSION['uid'],$idDossier);
+		}
+		require 'application/views/navigation/index.php';
+        require 'application/views/_templates/footer.php';
+	}
+	
+	/**
+	* Fonction qui va afficher les dossier extérieurs (au service de l'utilisateur coonecté) partagés avec l'utilisateur
+	* 
+	*/
 	public function displaySharedFiles(){
 		
 		require 'application/views/_templates/header.php';
@@ -104,7 +133,30 @@ class Navigation extends Controller
 		require 'application/views/navigation/index.php';
         require 'application/views/_templates/footer.php';
 	}
-
+	
+	
+	/**
+	* Fonction appellée quand on clique sur le bouton supprimer 
+	*
+	*/
+	public function DeleteFileNavigation()
+	{
+		require 'application/views/_templates/header.php';
+		
+		if(isset($_SESSION['RESPONSABLE']) && isset($_POST['idfic']))
+		{
+			$fichier = $_POST['idfic'];
+			$idResponsable = $_SESSION['RESPONSABLE'];
+			$navModel = $this->loadModel('navigationmodel');
+			$infoService = $navModel->getFilesInfoByIdFic($fichier);
+			$parent = $infoService['PARENT'];
+			$delete = $navModel->DeleteFile($idResponsable, $fichier);
+			header('location:'.URL.'navigation/goToFolder/'.$parent.'');
+		}
+		
+		require 'application/views/navigation/index.php';
+        require 'application/views/_templates/footer.php';
+	}
 }
 
 
