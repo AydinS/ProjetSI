@@ -39,6 +39,7 @@
 						echo '<li><a href="'.URL.'connexion/logout">Déconnexion</a></li>';
 						echo '<li><a href="'.URL.'navigation/index">Navigation</a>';
 						echo '<li><a href="'.URL.'navigation/displaySharedFiles">Dossiers partages</a>';
+						if($_SESSION['RESPONSABLE']) echo '<li><a href="'.URL.'extensionDroit/demandeEnAttente">Demande d\'extension de droit</a>';
 					}
 				?>
                 <!--<li><a href="<?php //echo URL.'contacts/index'; ?>">Contacts</a>-->
