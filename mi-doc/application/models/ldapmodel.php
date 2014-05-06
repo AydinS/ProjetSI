@@ -1,4 +1,4 @@
-<?php
+<?php	
 
 define('USERS_TREE', 'ou=users,dc=projetsi,dc=com');
 define('SERVICES_TREE', 'ou=services,dc=projetsi,dc=com');
@@ -53,6 +53,15 @@ public  function Connexion($uid,$password)
 				$_SESSION['cn'] = $info[0]["cn"][0];
 				$_SESSION['sn'] = $info[0]["sn"][0];
 				$_SESSION['mail'] = $info[0]["mail"][0];
+				$_SESSION['uid'] = $info[0]["uid"][0];
+				$_SESSION['mail'] = $info[0]["mail"][0];
+				$service = LdapModel::SearchServiceUtilisateur($uid);
+				if($service != 0)
+				{
+					$_SESSION['SERVICE'] = $service[0]["cn"][0]; // on récup le service
+					$responsable= LdapModel::isResponsableService($uid);
+					$_SESSION['RESPONSABLE'] = $responsable;
+				}
 			}
 			return $ds;
 		} else {
@@ -86,8 +95,8 @@ public  function Connexion($uid,$password)
 		//Recherche du service de l'utilisateur
 		$result = ldap_search(
 				$ds,
-				'ou=services,dc=projetsi,dc=com',
-				'(&(objectClass=groupOfUniqueNames)(uniqueMember=uid='.$uid.'))'
+				SERVICES_TREE,
+				'(&(objectClass=groupOfUniqueNames)(uniqueMember=uid='.$uid.')(!(cn=Responsables)))'
 		);
 		
 		$group = ldap_get_entries($ds, $result);
@@ -103,7 +112,7 @@ public  function Connexion($uid,$password)
 	{
 		$ds=$this->ldapCon;
 
-		$group = SearchService($uid);
+		$group = LdapModel::SearchServiceUtilisateur($uid);
 		
 		if($group != 0)
 		{
@@ -112,7 +121,7 @@ public  function Connexion($uid,$password)
 			//Recherche si responsable de services
 			$result = ldap_search(
 					$ds,
-					'ou=responsables, '.$service,
+					SERVICES_TREE,
 					'(&(objectClass=groupOfUniqueNames)(uniqueMember=uid='.$uid.'))'
 			);
 			
@@ -122,18 +131,65 @@ public  function Connexion($uid,$password)
 		if($group["count"] > 0)
 			return true;
 		else
-			return 0;
+			return false;
+	}
+	
+	public function DelResponsableService($uid)
+	{
+		$ds=$this->ldapCon;
+
+		$group = LdapModel::SearchServiceUtilisateur($uid);
+		
+		if($group != 0)
+		{
+			$service = $group["dn"][0];
+			
+			//Recherche si responsable de services
+			$result = ldap_search(
+					$ds,
+					'cn=Responsables, '.$service,
+					'(&(objectClass=groupOfUniqueNames)(uniqueMember=uid='.$uid.'))'
+			);
+			
+			//Supprime l'utilisateur de la liste des responsable du service
+			$r = ldap_mod_del($ds, $group["dn"][0], $entry);
+		}
+		
+		if($r)
+			return true;
+		else
+			return false;
+	}
+	
+	public function AddResponsableService($uid, $dnService)
+	{
+		$ds=$this->ldapCon;
+
+		$group = LdapModel::SearchServiceUtilisateur;
+		
+		$entry['uniqueMember'] = "uid=".$uid;
+		
+		//On supprime l'utilisateur des responsables de son ancien service si il était responsable
+		DelResponsableService($uid);
+		
+		//Ajoute l'utilisateur comme responsable du service
+		$r = ldap_mod_add($ds, 'cn=Responsables, '.$dnService, $entry);
+		
+		if($r)
+			return true;
+		else
+			return false;
 	}
 	
 	public function DelUtilisateurService($uid)
 	{
 		$ds=$this->ldapCon;
 		
-		$group = SearchService($uid);
+		$group = LdapModel::SearchServiceUtilisateur;
 
 		$entry['uniqueMember'] = "uid=".$uid;
 		
-		//Ajoute l'utilisateur dans le service
+		//Supprime l'utilisateur dans le service
 		$r = ldap_mod_del($ds, $group["dn"][0], $entry);
 		
 		if($r)
@@ -146,7 +202,7 @@ public  function Connexion($uid,$password)
 	{
 		$ds=$this->ldapCon;
 		
-		$group = SearchService($uid);
+		$group = LdapModel::SearchServiceUtilisateur;
 		
 		$entry['uniqueMember'] = "uid=".$uid;
 		
@@ -155,6 +211,19 @@ public  function Connexion($uid,$password)
 
 		//Ajoute l'utilisateur dans le service
 		$r = ldap_mod_add($ds, $dnService, $entry);
+		
+		if($r)
+			return true;
+		else
+			return false;
+	}
+	
+	public function DelUser($uid)
+	{
+		$ds=$this->ldapCon;
+		
+		//Supprime l'utilisateur de la base des users
+		$r = ldap_delete($ds, "uid=".$uid.",".USERS_TREE);
 		
 		if($r)
 			return true;
@@ -242,5 +311,18 @@ public  function Connexion($uid,$password)
 			return 0;
 		else
 			return 1;
+	}
+	
+	public function DelService($nomService)
+	{
+		$ds=$this->ldapCon;
+		
+		//Supprime un service de la base des services
+		$r = ldap_delete($ds, "cn=".$nomService.",".SERVICES_TREE);
+		
+		if($r)
+			return true;
+		else
+			return false;
 	}
 }

@@ -39,3 +39,19 @@ define('LDAP_HOST', '127.0.0.1');
 define('LDAP_PORT', '10389');
 define('LDAP_RDN', 'uid=admin,ou=system');
 define('LDAP_PASS', 'secret');
+
+/**
+ *
+ * Dossier où serons créés les dossier racines des services
+ */
+define('RACINE','services/');
+
+/**
+ *
+ * Constantes qui définissent les différents droits possibles sur les fichiers
+ */
+ 
+define('LECTURE','1');
+define('MODIF','2');
+define('BLOCK','-2');//Bloque un dossier à un utilisateur de son service
+define('RW_NAV','-1');//constante pour les tests
