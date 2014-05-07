@@ -59,6 +59,7 @@ class NavigationModel
 			$infos['NOM'] = $r->NOM;
 			$infos['DOSSIER'] = $r->NOM;
 			$infos['PARENT'] = $r->PARENTS;
+			$infos['LIBELLE'] = $r->LIBELLE;
 			$infos['ID_USER'] = $r->ID_USER;
 			$infos['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$r->ID_FICHIER) : RW_NAV;
 		}
@@ -67,7 +68,57 @@ class NavigationModel
 		}else return -1;
 	}
 	
-
+	public function getAllServiceFolder($idUser = null){
+		$req = "SELECT * FROM FICHIER WHERE parents = 0";
+		$query = $this->db->prepare($req);
+		$query->execute();
+		$res = $query->fetchAll();
+		$info = array();
+		$i = 0;
+		foreach($res as $infos){
+			$info[$i]['ID_FICHIER'] = $infos->ID_FICHIER;
+			$info[$i]['NOM'] = $infos->NOM;
+			$info[$i]['ID_USER'] = $infos->ID_USER;
+			$info[$i]['PATH'] = $infos->PATHS;
+			$info[$i]['PARENT'] = $infos->PARENTS;
+			$info[$i]['DOSSIER'] = $infos->DOSSIER;
+			$info[$i]['LIBELLE'] = $infos->LIBELLE;
+			$info[$i]['SERVICE'] = $infos->SERVICE;
+			$info[$i]['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : RW_NAV;
+			$i++;
+		}
+		if(count($res) > 0)
+			return $info;
+		else
+			return -1;
+		
+	}
+	
+	public function getAllFoldersFrom($idDossier, $idUser = null){
+		$req = "SELECT * FROM FICHIER WHERE parents = :iddossier and dossier = 1";
+		$query = $this->db->prepare($req);
+		$query->execute(array(':iddossier' => $idDossier));
+		$res = $query->fetchAll();
+		$info = array();
+		$i = 0;
+		foreach($res as $infos){
+			$info[$i]['ID_FICHIER'] = $infos->ID_FICHIER;
+			$info[$i]['NOM'] = $infos->NOM;
+			$info[$i]['ID_USER'] = $infos->ID_USER;
+			$info[$i]['PATH'] = $infos->PATHS;
+			$info[$i]['PARENT'] = $infos->PARENTS;
+			$info[$i]['DOSSIER'] = $infos->DOSSIER;
+			$info[$i]['LIBELLE'] = $infos->LIBELLE;
+			$info[$i]['SERVICE'] = $infos->SERVICE;
+			$info[$i]['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : RW_NAV;
+			$i++;
+		}
+		if(count($res) > 0)
+			return $info;
+		else
+			return -1;
+		
+	}
 	
 	public function getServiceId($service,$idUser = null){
 		$req = "SELECT * FROM FICHIER WHERE SERVICE = :service and parents = 0";
@@ -82,6 +133,7 @@ class NavigationModel
 			$info['PATH'] = $infos->PATHS;
 			$info['PARENT'] = $infos->PARENTS;
 			$info['DOSSIER'] = $infos->DOSSIER;
+			$info['LIBELLE'] = $infos->LIBELLE;
 			$info['SERVICE'] = $infos->SERVICE;
 			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : RW_NAV;
 		}

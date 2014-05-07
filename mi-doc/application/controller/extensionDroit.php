@@ -62,6 +62,38 @@ class ExtensionDroit extends Controller
 			require 'application/views/_templates/footer.php';
 	}
 	
+	/**
+	* Fonction qui charge la page du formulaire de demande d'extension
+	* 
+	*/
+	public function demanderExtension(){
+	
+		require 'application/views/_templates/header.php';
+		$navModel = $this->loadModel('navigationmodel');
+		$selectDossier = $navModel->getAllServiceFolder();
+        require 'application/views/extension/form_demande_extension.php';
+        require 'application/views/_templates/footer.php';
+		
+	}
+	
+	/**
+	* 
+	* Fonction qui affiche un balise déroulante contenant tous les dossier d'un service
+	*/
+	public function getDossiers(){
+		
+		if(isset($_POST['service'])){
+			$navModel = $this->loadModel('navigationmodel');
+			$dossiers = $navModel->getAllFoldersFrom((int)$_POST['service'], $idUser = null);
+			$options = "";
+			for($i=0;$i<count($dossiers);$i++){
+				
+				$options = $options.'<option value="'.$dossiers[$i]['ID_FICHIER'].'">'.$dossiers[$i]['NOM'].'</option>';
+			}
+			echo $options;
+		}
+	}
+	
 	public function action(){
 	
 		$extensionModel=$this->loadModel('ExtensionDroitModel');

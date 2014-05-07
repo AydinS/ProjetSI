@@ -12,8 +12,8 @@
     <!-- Bootstrap core CSS -->
     <link href="<?php echo URL.'public/'; ?>css/bootstrap.css" rel="stylesheet">
 
-    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script src="<?php echo URL.'public/'; ?>js/jquery-1.10.2.js"></script>
+    <script src="<?php echo URL.'public/'; ?>js/bootstrap.js"></script>
     <!-- Add custom CSS here -->
     <link href="<?php echo URL.'public/'; ?>css/simple-sidebar.css" rel="stylesheet">
 	<link href="<?php echo URL.'public/'; ?>css/filter.css" rel="stylesheet">
@@ -39,6 +39,7 @@
 						echo '<li><a href="'.URL.'connexion/logout">Déconnexion</a></li>';
 						echo '<li><a href="'.URL.'navigation/index">Navigation</a>';
 						echo '<li><a href="'.URL.'navigation/displaySharedFiles">Dossiers partages</a>';
+						echo '<li><a href="'.URL.'extensionDroit/demanderExtension">Demander une extension</a>';
 						if($_SESSION['RESPONSABLE']) echo '<li><a href="'.URL.'extensionDroit/demandeEnAttente">Demande d\'extension de droit</a>';
 					}
 				?>
