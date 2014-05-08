@@ -24,7 +24,7 @@
 							$str = $str.$d.'/';
 							$infos = $navModel->getIdFicByPath(substr($str,0,strlen($str)-1));
 							$droit_fic = $navModel->getDroit($_SESSION['uid'],$infos['PARENT']);//on récupère les droit du dossier
-							if($droit_fic >= LECTURE || $infos['SERVICE'] == $_SESSION['SERVICE'])//s'il a les droit
+							if(($maxd != (count($nomDossier)-1)) && ($droit_fic >= LECTURE || $infos['SERVICE'] == $_SESSION['SERVICE']))//s'il a les droit
 								echo '<li><a href="'.URL.'navigation/displaycontent/'.$infos['ID_FICHIER'].'">'.$d.'</a></li>';//ici le lien vers le dossier est créé en passant l'id d'un des fichier du dossier, ensuite dans la fonction displaycontent on récupèrera l'id du dossier via le parent de l'id du fichier
 							else//si pas de droit
 								echo '<li><a href="#">'.$d.'</a></li>';
