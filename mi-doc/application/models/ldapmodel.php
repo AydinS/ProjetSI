@@ -56,6 +56,8 @@ public  function Connexion($uid,$password)
 				$_SESSION['uid'] = $info[0]["uid"][0];
 				$_SESSION['mail'] = $info[0]["mail"][0];
 				$service = LdapModel::SearchServiceUtilisateur($uid);
+				
+				
 				if($service != 0)
 				{
 					$_SESSION['SERVICE'] = $service[0]["cn"][0]; // on récup le service
@@ -122,7 +124,7 @@ public  function Connexion($uid,$password)
 			$result = ldap_search(
 					$ds,
 					SERVICES_TREE,
-					'(&(objectClass=groupOfUniqueNames)(uniqueMember=uid='.$uid.'))'
+					'(&(objectClass=groupOfUniqueNames)(uniqueMember=uid='.$uid.')(cn=Responsables)))'
 			);
 			
 			$group = ldap_get_entries($ds, $result);
