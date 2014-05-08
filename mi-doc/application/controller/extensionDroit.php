@@ -19,12 +19,14 @@ class ExtensionDroit extends Controller
 			//On a bien récuperer des demandes
 			if($demande != -1)
 			{
+				$i=0;
 				foreach($demande as $infos){
 				
 					if($infos['statut']=="0")
 					{
-						$enattente=$infos;
+						$enattente[$i]=$infos;
 					}
+					$i++;
 				}
 			}
 		}
@@ -50,7 +52,7 @@ class ExtensionDroit extends Controller
 				{
 					foreach($demande as $infos){
 					
-						if($infos['statut']=="1")
+						if($infos['statut']=="1" || $infos['statut']=="2")
 						{
 							$enattente=$infos;
 						}
@@ -76,6 +78,31 @@ class ExtensionDroit extends Controller
 		
 	}
 	
+	public function validerDemande(){
+	
+		require 'application/views/_templates/header.php';
+		$extensionModel = $this->loadModel('extensiondroitmodel');
+		
+		if(isset($_POST["dossier"]) && isset($_POST["droit"]))
+		{
+			$statut=$extensionModel->newDemande($_POST["dossier"], $_SESSION["uid"], $_POST["droit"]);
+			
+			if($statut)
+			{
+				echo '<div class="alert alert-success"><strong>Demande crée !</strong> Votre demande est maintenant soumise à validation</div>';
+			}
+			else
+			{
+				echo '<div class="alert alert-danger"><strong>Echec interne !</strong> La demande contient des paramètres invalide</div>';
+			}
+		}
+		else
+		{
+			echo '<div class="alert alert-danger"><strong>Champ manquant !</strong> Veuillez renseigner tous les champs de la demande</div>';
+		}
+		
+		require 'application/views/_templates/footer.php';
+	}
 	/**
 	* 
 	* Fonction qui affiche un balise déroulante contenant tous les dossier d'un service
@@ -89,10 +116,23 @@ class ExtensionDroit extends Controller
 			for($i=0;$i<count($dossiers);$i++){
 				
 				$options = $options.'<option value="'.$dossiers[$i]['ID_FICHIER'].'">'.$dossiers[$i]['NOM'].'</option>';
+				
+				$sousDossier=$navModel->getAllFoldersFrom($dossiers[$i]['ID_FICHIER'], null);
+
+				while($sousDossier > 0)
+				{
+					for($j=0;$j<count($sousDossier);$j++)
+					{
+						$options = $options.'<option value="'.$sousDossier[$j]['ID_FICHIER'].'">-- '.$sousDossier[$j]['NOM'].'</option>';
+						$sousDossier=$navModel->getAllFoldersFrom($sousDossier[$j]['ID_FICHIER'], null);
+					}
+				}
+				
 			}
 			echo $options;
 		}
 	}
+	
 	
 	public function action(){
 	

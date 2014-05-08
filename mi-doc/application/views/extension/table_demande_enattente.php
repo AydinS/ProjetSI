@@ -33,7 +33,7 @@
 			<?php
 				if(isset($enattente)){
 
-						foreach($demande as $infos){
+						foreach($enattente as $infos){
 							echo '<tr>';
 							echo '<td></td>';
 							echo '<td>'.$infos['id_demande'].'</td>';

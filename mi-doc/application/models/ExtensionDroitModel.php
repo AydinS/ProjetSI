@@ -38,7 +38,6 @@ class ExtensionDroitModel
 		foreach($res as $r){
 		
 			$appartient= $navModel->getFilesInfoByIdFic($r->ID_FICHIER,null);
-			//$service= $ldapModel->SearchServiceUtilisateur($uid);
 			
 			if(($appartient['SERVICE'] == $_SESSION['SERVICE'] ))
 			{
@@ -89,6 +88,26 @@ class ExtensionDroitModel
 		}
 		// insertion d'une ligne
 		$stmt->execute();
+	}
+	
+	public function newDemande($id_fichier, $id_user, $droit)
+	{
+		try {
+			
+		$stmt = $this->db->prepare("INSERT INTO demande_extension (ID_USER, ID_FICHIER, DROIT, STATUT) VALUES (:id_user, :id_fichier, :droit, '0')");
+		$stmt->bindParam(':id_user', $id_user);
+		$stmt->bindParam(':id_fichier', $id_fichier);
+		$stmt->bindParam(':droit', $droit);
+		
+		// insertion d'une ligne
+		$stmt->execute();
+		}
+		catch (Exception $e) {
+			if(DEBUG) die('Erreur : '.$e->getMessage());
+			return false;
+		}
+		
+		return true;
 	}
 }
 ?>

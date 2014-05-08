@@ -99,15 +99,7 @@
 						echo '</td>';
 						echo '<td>';
 						//Boutons de suppression :
-						if(isset($_SESSION['RESPONSABLE']))
-						{
-							echo '<form action="'.URL.'navigation/DeleteFileNavigation" method="POST">';
-							echo '<input type="hidden" name="idfic" value="'.$fichiers[$i]['ID_FICHIER'].'">';
-							echo '<button type="submit" name="gotodirectory" value="'.$fichiers[$i]['ID_FICHIER'].'" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-remove"></span>&nbsp; Supprimer</button>';
-							echo '</form>';
-						}
-						
-						if($fichiers[$i]['ID_USER'] == $_SESSION['uid'] && $_SESSION['RESPONSABLE'] != 1)
+						if(isset($_SESSION['RESPONSABLE']) || ($fichiers[$i]['ID_USER'] == $_SESSION['uid'] && $_SESSION['RESPONSABLE'] != 1))
 						{
 							echo '<form action="'.URL.'navigation/DeleteFileNavigation" method="POST">';
 							echo '<input type="hidden" name="idfic" value="'.$fichiers[$i]['ID_FICHIER'].'">';

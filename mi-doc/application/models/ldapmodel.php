@@ -118,13 +118,13 @@ public  function Connexion($uid,$password)
 		
 		if($group != 0)
 		{
-			$service = $group["dn"][0];
+			$service = $group[0]["dn"][0];
 			
 			//Recherche si responsable de services
 			$result = ldap_search(
 					$ds,
 					SERVICES_TREE,
-					'(&(objectClass=groupOfUniqueNames)(uniqueMember=uid='.$uid.')(cn=Responsables)))'
+					'(&(objectClass=groupOfUniqueNames)(uniqueMember=uid='.$uid.')(cn=Responsables))'
 			);
 			
 			$group = ldap_get_entries($ds, $result);
