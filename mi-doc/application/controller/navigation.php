@@ -150,7 +150,9 @@ class Navigation extends Controller
 			$navModel = $this->loadModel('navigationmodel');
 			$infoService = $navModel->getFilesInfoByIdFic($fichier);
 			$parent = $infoService['PARENT'];
-			$delete = $navModel->DeleteFile($idResponsable, $fichier);
+			
+			if($idResponsable == 1) $delete = $navModel->DeleteFile($idResponsable, $fichier);
+			else $delete = $navModel->DeleteFile($_SESSION['uid'], $fichier);
 			header('location:'.URL.'navigation/goToFolder/'.$parent.'');
 		}
 		
