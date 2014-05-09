@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 class Navigation extends Controller
 {
@@ -8,12 +8,12 @@ class Navigation extends Controller
 		//echo $_SESSION['service'];
 		require 'application/views/_templates/header.php';
 		if(isset($_SESSION['SERVICE'])){
-			//si user connecté et si on connait le service de l'utilisateur
-			// on instancie le model navigationmodel pour récup les fichier de la racine de son service
+			//si user connectÃ© et si on connait le service de l'utilisateur
+			// on instancie le model navigationmodel pour rÃ©cup les fichier de la racine de son service
 			$navModel = $this->loadModel('navigationmodel');
-			// on récupère l'id de la racine du service pour ensuite faire un readdir et une requete renvoyant tous les fichier qui ont pour parent l'id 
+			// on rÃ©cupÃ¨re l'id de la racine du service pour ensuite faire un readdir et une requete renvoyant tous les fichier qui ont pour parent l'id 
 			$infoService = $navModel->getServiceId($_SESSION['SERVICE'],$_SESSION['uid']);
-			if($infoService != -1){// on a bien récupérer l'id service
+			if($infoService != -1){// on a bien rÃ©cupÃ©rer l'id service
 				
 				$path = __DIR__.'../../'.RACINE.$_SESSION['SERVICE'];
 				
@@ -35,7 +35,7 @@ class Navigation extends Controller
 	}
 	
 	/**
-	* Fonction appellée quand on clique sur un dossier de la liste de fichiers
+	* Fonction appellÃ©e quand on clique sur un dossier de la liste de fichiers
 	* Fonction va se rendre dans le parent du fichier qui a pour ID idfic
 	*/
 	public function displaycontent($idfic){
@@ -44,9 +44,9 @@ class Navigation extends Controller
 		if(isset($idfic)){
 			
 			$navModel = $this->loadModel('navigationmodel');
-			//récupère les infos du dossier que l'utilisateur veut consulter
+			//rÃ©cupÃ¨re les infos du dossier que l'utilisateur veut consulter
 			$infoService = $navModel->getFilesInfoByIdFic($idfic);
-			//ici on teste si l'utilisateur à les droits sur le fichier d'id idfic et s'il n'a pas les droits on le redirige on sort de la fonction par un return
+			//ici on teste si l'utilisateur Ã  les droits sur le fichier d'id idfic et s'il n'a pas les droits on le redirige on sort de la fonction par un return
 			
 			$path = $infoService['PATH'];
 			$nomDossier = $navModel->getCurrentLocation($infoService['PATH'],$idfic);//
@@ -63,7 +63,7 @@ class Navigation extends Controller
 	}
 	
 	/**
-	* Fonction appellée quand on clique sur un dossier qui compose le chemin vers le dossier courant 
+	* Fonction appellÃ©e quand on clique sur un dossier qui compose le chemin vers le dossier courant 
 	* 	
 	*/
 	public function goToDirectory(){
@@ -72,7 +72,7 @@ class Navigation extends Controller
 		if(isset($_POST['gotodirectory']) && isset($_POST['idfic'])){
 			$navModel = $this->loadModel('navigationmodel');
 			$infoService = $navModel->getFilesInfoByIdFic((int)$_POST['idfic'],$_SESSION['uid']);
-			//ici on teste si l'utilisateur à les droits sur le fichier d'id idfic et s'il n'a pas les droits on le redirige on sort de la fonction par un return
+			//ici on teste si l'utilisateur Ã  les droits sur le fichier d'id idfic et s'il n'a pas les droits on le redirige on sort de la fonction par un return
 			
 			$path = __DIR__.'../../'.$_POST['gotodirectory'];
 			$nomDossier = $navModel->getCurrentLocation((string)$_POST['gotodirectory'],(int)$_POST['idfic']);
@@ -88,7 +88,7 @@ class Navigation extends Controller
 	}
 	
 	/**
-	* Fonction appellée pour aller vers le dosssier d'ID idDossier
+	* Fonction appellÃ©e pour aller vers le dosssier d'ID idDossier
 	* 
 	*/
 	public function goToFolder($idDossier){
@@ -97,7 +97,7 @@ class Navigation extends Controller
 		if(isset($idDossier)){
 			$navModel = $this->loadModel('navigationmodel');
 			$infoService = $navModel->getFilesInfoByIdFic($idDossier,$_SESSION['uid']);
-			//ici on teste si l'utilisateur à les droits sur le fichier d'id idfic et s'il n'a pas les droits on le redirige on sort de la fonction par un return
+			//ici on teste si l'utilisateur Ã  les droits sur le fichier d'id idfic et s'il n'a pas les droits on le redirige on sort de la fonction par un return
 			
 			$path = __DIR__.'../../'.$infoService['PATH'].'/'.$infoService['NOM'];
 			$nomDossier = $navModel->getCurrentLocation((string)$infoService['PATH'].'/'.$infoService['NOM'],$idDossier);
@@ -113,7 +113,7 @@ class Navigation extends Controller
 	}
 	
 	/**
-	* Fonction qui va afficher les dossier extérieurs (au service de l'utilisateur coonecté) partagés avec l'utilisateur
+	* Fonction qui va afficher les dossier extÃ©rieurs (au service de l'utilisateur coonectÃ©) partagÃ©s avec l'utilisateur
 	* 
 	*/
 	public function displaySharedFiles(){
@@ -136,7 +136,7 @@ class Navigation extends Controller
 	
 	
 	/**
-	* Fonction appellée quand on clique sur le bouton supprimer 
+	* Fonction appellÃ©e quand on clique sur le bouton supprimer 
 	*
 	*/
 	public function DeleteFileNavigation()
@@ -155,6 +155,80 @@ class Navigation extends Controller
 		}
 		
 		require 'application/views/navigation/index.php';
+        require 'application/views/_templates/footer.php';
+	}
+	
+	public function uploadto()
+	{
+		require 'application/views/_templates/header.php';
+		if(isset($_POST['chemin'])) $chemin = $_POST['chemin'];
+		else $chemin = $_GET['chemin'];
+		if(isset($_POST['parent'])) $parent = $_POST['parent'];
+		else $parent = $_GET['parent'];
+		
+		if(isset($_POST['modif'])) $modif = $_POST['modif'];
+		else if(isset($_GET['modif'])) $modif = $_GET['modif'];
+		
+		if(isset($_POST['description']))
+		{
+			if($_FILES['uploadfile']['error'] > 0) $erreur = "Erreur lors du transfert";
+			$uid = $_SESSION['uid'];
+			$description = $_POST['description'];
+			
+			$dossier = 0;
+			$service = $_SESSION['SERVICE'];
+			$fichier = $_FILES['uploadfile']['name'];			
+			
+			$path = __DIR__.$chemin;
+			$path = str_replace('/', '\\', $path);
+			$path = str_replace('\\controller', '', $path);
+			$chemin = str_replace('/services', 'services', $chemin);
+			
+			
+			$navModel = $this->loadModel('navigationmodel');
+			
+			if(isset($modif) && $modif!="")
+			{
+				if(isset($_POST['fic'])) $fic = $_POST['fic'];
+				else $fic = $_GET['fic'];
+				
+				$infoService = $navModel->updateUploadFile($fic, $uid, $description, $fichier, $chemin);
+			}
+			else
+			{
+				$infoService = $navModel->uploadFile($uid, $description, $fichier, $chemin, $dossier, $service, $parent);
+			}
+			
+			echo '<div class="container text-left" >'.'<legend>Upload :'.$_FILES['uploadfile']['name'].'</legend>';
+			if(move_uploaded_file($_FILES['uploadfile']['tmp_name'], $path.'\\'.$fichier))
+			{
+				  	echo '<div class="alert alert-success">';
+				  		echo 'Upload effectué avec succès !';
+					echo '</div>';
+			}
+			else //Sinon (la fonction renvoie FALSE).
+			{
+				  	echo '<div class="alert alert-danger">';
+				  		echo 'Echec de l\'upload !';
+					echo '</div>';
+			}
+			echo '</div>';
+			
+			header('location:'.URL.'navigation/goToFolder/'.$parent.'');
+		}
+		else
+		{
+			if(isset($modif))
+			{
+				if(isset($_POST['fic'])) $fic = $_POST['fic'];
+				else $fic = $_GET['fic'];
+				
+				$navModel = $this->loadModel('navigationmodel');
+				$infoFile = $navModel->getFilesInfoByIdFic($fic);
+			}
+			
+			require 'application/views/navigation/form_upload.php';
+		}
         require 'application/views/_templates/footer.php';
 	}
 }

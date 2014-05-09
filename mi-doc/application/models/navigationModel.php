@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 
 class NavigationModel
@@ -178,6 +178,7 @@ class NavigationModel
 			$info['NOM'] = $infos->NOM;
 			$info['ID_USER'] = $infos->ID_USER;
 			$info['PATH'] = $infos->PATHS;
+			$info['DESCRIPTION']= $infos->DESCRIPTION;
 			$info['PARENT'] = $infos->PARENTS;
 			$info['DOSSIER'] = $infos->DOSSIER;
 			$info['SERVICE'] = $infos->SERVICE;
@@ -206,7 +207,7 @@ class NavigationModel
 				foreach($res as $fic){
 					$fichiers[$i]['NOM'] = $fic->NOM;
 					$fichiers[$i]['ID_FICHIER'] = $fic->ID_FICHIER;
-					$fichiers[$i]['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$fic->ID_FICHIER) : RW_NAV;
+					$fichiers[$i]['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$fic->PARENTS) : RW_NAV;
 					$fichiers[$i]['DESC'] = $fic->DESCRIPTION;
 					$fichiers[$i]['PATH'] = $fic->PATHS;
 					$fichiers[$i]['DOSSIER'] = $fic->DOSSIER;
@@ -263,12 +264,26 @@ class NavigationModel
 	}
 	
 	public function DeleteFile($idUser, $idFile){
-	echo "Fichier = $idFile<br>";
 			if($idUser == 1) $req = "DELETE FROM FICHIER WHERE ID_FICHIER = :idFile";
 			else $req = "DELETE FROM FICHIER WHERE ID_USER = :iduser and ID_FICHIER = :idFile";
 			
 			$query = $this->db->prepare($req);
 			if($idUser == 1) $query->execute(array(':idFile' => $idFile));
 			else $query->execute(array(':iduser' => $idUser,':idFile' => $idFile));
+	}
+	
+	public function uploadFile($uid, $description, $namefichier, $path, $dossier, $service, $parent)
+	{
+		$req = "INSERT INTO FICHIER(ID_USER, LIBELLE, NOM, DESCRIPTION, PATHS, DOSSIER, SERVICE, PARENTS) VALUES ('".$uid."', '".$description."', '".$namefichier."', '".$description."', '".$path."', $dossier, '".$service."', $parent)";
+		echo "Requete = $req<br>";
+		$query = $this->db->prepare($req);
+		$query->execute();
+	}
+	
+	public function updateUploadFile($fic, $uid, $description, $namefichier, $path)
+	{
+		$req = "UPDATE FICHIER SET ID_USER = '".$uid."', DESCRIPTION = '".$description."', NOM = '".$namefichier."', PATHS = '".$path."' where ID_FICHIER = $fic"; 
+		$query = $this->db->prepare($req);
+		$query->execute();
 	}
 }
