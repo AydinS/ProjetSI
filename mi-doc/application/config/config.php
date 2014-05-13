@@ -25,9 +25,16 @@ define('URL', 'http://127.0.0.1/mi-doc/');
  * This is the place where you define your database credentials, database type etc.
  * Pour une base Oracle on remplis les champs comme suit:
  */
+
+/*define('DB_TYPE', 'oci');
+define('DB_HOST', '127.0.0.1');
+define('DB_NAME', 'miage03/miage');
+define('DB_USER', 'madelcaf');
+define('DB_PASS', 'I6fjwtmw');*/
+ 
 define('DB_TYPE', 'oci');
-define('DB_HOST', '127.0.0.1:8080/XE');
-define('DB_NAME', 'ProjetSI');
+define('DB_HOST', '127.0.0.1:8080/xe');
+define('DB_NAME', '127.0.0.1');
 define('DB_USER', 'ProjetSI');
 define('DB_PASS', 'ProjetSI');
 

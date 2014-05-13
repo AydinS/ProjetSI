@@ -30,6 +30,11 @@ class NavigationModel
 		}*/
     }
 	
+	/**
+	* Renvoie le chemin vers le fichier sous forme décomposé dans un tableau
+	* param : le chemin
+	* param : l'id fichier
+	*/
 	public function getCurrentLocation($path,$idfic = null){
 		$crumbs = explode("/",$path);
 		$str = array();
@@ -43,6 +48,11 @@ class NavigationModel
 		return $str;
 	}
 	
+	/**
+	* Renvoie l'id d'un fichier en fournissant un path
+	* param : le chemin
+	* param : l'id de l'utilisateur
+	*/
 	public function getIdFicByPath($path,$idUser = null){
 		
 		//$req = "SELECT * FROM FICHIER WHERE PATHS = '".$path."'";
@@ -68,6 +78,48 @@ class NavigationModel
 		}else return -1;
 	}
 	
+	/**
+	* Renvoie le statut d'un fichier
+	* param : l'id du fichier
+	* param : l'id utilisateur demandant la validation
+	*/
+	public function getFileStatut($idfic,$iduser){
+		
+		//vérifier s'il y a une validation
+		$reqVal = "SELECT * FROM VALIDATION WHERE ID_FICHIER = :idfic and ID_USER = :iduser";
+		$query = $this->db->prepare($reqVal);
+		$query->execute(array(':idfic' => $idfic,":iduser" => $iduser));
+		$infos = array();
+		$res = $query->fetchAll();
+		if(count($res) > 0){//
+			foreach($res as $v){	
+				$infos['ID_VALIDATION'] = $v->ID_VALIDATION;
+			}
+			//récupère la somme des validation
+			$reqFaireVal = "SELECT * FROM VALIDATION WHERE ID_VALIDATION = :idval and ID_FICHIER :idfic and statut = 2";
+			$query = $this->db->prepare($reqFaireVal);
+			$query->execute(array(':idval' => $infos['ID_VALIDATION'],":idfic" => $idfic));
+			$res = $query->fetchAll();
+			if(count($res) > 0)
+				return 'Refuse';
+			//
+			$reqFaireVal = "SELECT * FROM VALIDATION WHERE ID_VALIDATION = :idval and ID_FICHIER :idfic and statut = 0";
+			$query = $this->db->prepare($reqVal);
+			$query->execute(array(':idval' => $infos['ID_VALIDATION'],":idfic" => $idfic));
+			$res = $query->fetchAll();
+			if(count($res) > 0)
+				return 'Attente';
+			return 'Valide';
+			
+		}else{
+			return '';
+		}
+	}
+	
+	/**
+	* Renvoie tous les fichiers/dossiers à la racine du dossier service
+	* param : l'id de l'utilisateur
+	*/
 	public function getAllServiceFolder($idUser = null){
 		$req = "SELECT * FROM FICHIER WHERE parents = 0";
 		$query = $this->db->prepare($req);
@@ -84,6 +136,7 @@ class NavigationModel
 			$info[$i]['DOSSIER'] = $infos->DOSSIER;
 			$info[$i]['LIBELLE'] = $infos->LIBELLE;
 			$info[$i]['SERVICE'] = $infos->SERVICE;
+			$info[$i]['STATUT']= $idUser != null ? NavigationModel::getFileStatut($infos->ID_FICHIER,$idUser) : '';
 			$info[$i]['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : RW_NAV;
 			$i++;
 		}
@@ -94,6 +147,11 @@ class NavigationModel
 		
 	}
 	
+	/**
+	* Renvoie tous les dossier d'un dossier (le dossier 'parent')
+	* param : l'id du dossier parent
+	* param : l'id utilisateur
+	*/
 	public function getAllFoldersFrom($idDossier, $idUser = null){
 		$req = "SELECT * FROM FICHIER WHERE parents = :iddossier and dossier = 1";
 		$query = $this->db->prepare($req);
@@ -110,6 +168,7 @@ class NavigationModel
 			$info[$i]['DOSSIER'] = $infos->DOSSIER;
 			$info[$i]['LIBELLE'] = $infos->LIBELLE;
 			$info[$i]['SERVICE'] = $infos->SERVICE;
+			$info[$i]['STATUT']= $idUser != null ? NavigationModel::getFileStatut($infos->ID_FICHIER,$idUser) : '';
 			$info[$i]['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : RW_NAV;
 			$i++;
 		}
@@ -120,6 +179,11 @@ class NavigationModel
 		
 	}
 	
+	/**
+	* Renvoie les informations sur le dossier du service de l'utilisateur
+	* param : le service de l'utilisateur
+	* param : l'id utilisateur
+	*/
 	public function getServiceId($service,$idUser = null){
 		$req = "SELECT * FROM FICHIER WHERE SERVICE = :service and parents = 0";
 		$query = $this->db->prepare($req);
@@ -135,6 +199,7 @@ class NavigationModel
 			$info['DOSSIER'] = $infos->DOSSIER;
 			$info['LIBELLE'] = $infos->LIBELLE;
 			$info['SERVICE'] = $infos->SERVICE;
+			$info['STATUT']= $idUser != null ? NavigationModel::getFileStatut($infos->ID_FICHIER,$idUser) : '';
 			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : RW_NAV;
 		}
 		if(count($res) > 0)
@@ -144,6 +209,11 @@ class NavigationModel
 		
 	}
 	
+	/**
+	* Renvoie les informations sur un fichier en renseignant son parent
+	* param : l'id du fichier parent
+	* param : l'id utilisateur
+	*/
 	public function getFilesInfoByParent($idfic,$idUser = null){
 		$req = "SELECT * FROM FICHIER WHERE parents = :idfic";
 		$query = $this->db->prepare($req);
@@ -157,6 +227,7 @@ class NavigationModel
 			$info['PATH'] = $infos->PATHS;
 			$info['PARENT'] = $infos->PARENTS;
 			$info['DOSSIER'] = $infos->DOSSIER;
+			$info['STATUT']= $idUser != null ? NavigationModel::getFileStatut($infos->ID_FICHIER,$idUser) : '';
 			$info['SERVICE'] = $infos->SERVICE;
 			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : RW_NAV;
 		}
@@ -166,7 +237,12 @@ class NavigationModel
 			return -1;
 		
 	}
-
+	
+	/**
+	* Renvoie toutes les informations sur un fichier
+	* param : l'id fichier
+	* param : l'id utilisateur
+	*/
 	public function getFilesInfoByIdFic($idfic,$idUser = null){
 		$req = "SELECT * FROM FICHIER WHERE ID_FICHIER = :idfic";
 		$query = $this->db->prepare($req);
@@ -182,6 +258,7 @@ class NavigationModel
 			$info['PARENT'] = $infos->PARENTS;
 			$info['DOSSIER'] = $infos->DOSSIER;
 			$info['SERVICE'] = $infos->SERVICE;
+			$info['STATUT']= $idUser != null ? NavigationModel::getFileStatut($infos->ID_FICHIER,$idUser) : '';
 			$info['DROIT'] = $idUser != null ? NavigationModel::getDroit($idUser,$infos->ID_FICHIER) : RW_NAV;
 		}
 		if(count($res) > 0)
@@ -191,6 +268,12 @@ class NavigationModel
 		
 	}	
 	
+	/**
+	* Renvoie tous les fichiers d'un dossier
+	* param : le dossier
+	* param : l'id utilisateur
+	* param : le chemin vers ce dossier
+	*/
 	public function getAllFilesByParents($idParents,$idUser = null,$path = null){
 		$fichiers = array();
 		$i = 0;
@@ -213,21 +296,23 @@ class NavigationModel
 					$fichiers[$i]['DOSSIER'] = $fic->DOSSIER;
 					$fichiers[$i]['SERVICE'] = $fic->SERVICE;
 					$fichiers[$i]['PARENT'] = $fic->PARENTS;
+					$fichiers[$i]['STATUT']= $idUser != null ? NavigationModel::getFileStatut($fic->ID_FICHIER,$idUser) : '';
 					$fichiers[$i]['ID_USER'] = $fic->ID_USER;
 					$i+=1;
 				}
 				return $fichiers;
 			}
 			else return 0;
-			
-	
-
 	}
 	
+	/**
+	* Renvoie tous les dossiers partagés avec l'utilisateur
+	* param : l'utilisateur
+	*/
 	public function getAllSharedFolders($idUser){
 		$fichiers = array();
 		$i = 0;
-		$req = "SELECT * FROM FICHIER f, DROIT d where d.ID_USER = :iduser and d.ID_FICHIER = f.ID_FICHIER and f.DOSSIER = 1 and f.ID_USER <> d.ID_USER and d.DROIT >= ".LECTURE."";
+		$req = "SELECT * FROM DROIT d, FICHIER f where d.ID_USER = :iduser and d.ID_FICHIER = f.ID_FICHIER and f.DOSSIER = 1 and f.ID_USER <> d.ID_USER and d.DROIT >= ".LECTURE."";
 		$query = $this->db->prepare($req);
 		$query->execute(array(':iduser' => $idUser));
 		$res = $query->fetchAll();
@@ -242,6 +327,7 @@ class NavigationModel
 					$fichiers[$i]['DOSSIER'] = $fic->DOSSIER;
 					$fichiers[$i]['SERVICE'] = $fic->SERVICE;
 					$fichiers[$i]['PARENT'] = $fic->PARENTS;
+					$fichiers[$i]['STATUT']= $idUser != null ? NavigationModel::getFileStatut($fic->ID_FICHIER,$idUser) : '';
 					$fichiers[$i]['ID_USER'] = $fic->ID_USER;
 					$i+=1;
 				}
@@ -250,6 +336,11 @@ class NavigationModel
 			else return 0;
 	}
 	
+	/**
+	* Renvoie le droit d'un utilisateur sur un fichier
+	* param : l'utilisateur
+	* param : l'id fichier
+	*/
 	public function getDroit($idUser,$idFic){
 			$req = "SELECT * FROM DROIT WHERE ID_USER = :iduser and ID_FICHIER = :idfic";
 			$query = $this->db->prepare($req);
@@ -285,5 +376,58 @@ class NavigationModel
 		$req = "UPDATE FICHIER SET ID_USER = '".$uid."', DESCRIPTION = '".$description."', NOM = '".$namefichier."', PATHS = '".$path."' where ID_FICHIER = $fic"; 
 		$query = $this->db->prepare($req);
 		$query->execute();
+	}
+
+	public function searchNameFile($nameFile, $path)
+	{
+		$req = "SELECT COUNT(*) FROM FICHIER WHERE NOM='".$nameFile."' and PATHS = '".$path."'";
+		echo "Rquete = $req<br>";
+		$query = $this->db->prepare($req);
+		$query->execute();
+		$res = $query->fetchAll();
+		if(count($res)>0) return 1;
+		else return 0;
+	}
+
+	/**
+	* Methode: creerDossier
+	 * Comportement : Créée un dossier
+	 * Paramètres IN : void
+	 * Paramètres OUT : void
+	 * Controlleur : dossier
+	 * Page out possibles : N/A
+	*/
+	public function creerDossier($pathParent,$nomDoss,$descDoss,$id_user,$idParent,$service){
+		
+		$pathComplet = array();
+		$pathComplet = explode('\controller../../',$pathParent);
+		$pathMkdir = $pathComplet[0].'\\'.$pathComplet[1];
+		$pathMkdir = str_replace('/','\\',$pathMkdir);
+		$pathMkdir = $pathMkdir.'\\'.$nomDoss;
+
+		if(mkdir($pathMkdir,0700)){
+			$req = "INSERT INTO FICHIER(ID_USER, LIBELLE, NOM, DESCRIPTION, PATHS, DOSSIER, SERVICE, PARENTS) VALUES ('".$id_user."', '".$nomDoss."', '".$nomDoss."', '".$descDoss."', '".$pathComplet[1]."', '1', '".$service."', '".$idParent."')";
+			$query = $this->db->prepare($req);
+			$query->execute();
+		}
+	}
+
+	/**
+	* Methode: dossierExits
+	 * Comportement : Vérifie si un dossier du même nom existe dans un repertoire donné 
+	 * Paramètres IN : le nom du dossier, le répertoire
+	 * Paramètres OUT : Boolean, Vrai si le dossier existe, Faux sinon
+	 * Controlleur : dossier
+	 * Page out possibles : N/A
+	*/
+	public function dossierExists($nomDoss,$paths){
+		$req = "SELECT * FROM FICHIER WHERE nom = '".$nomDoss."' AND PATHS='".$paths."'";
+		$query = $this->db->prepare($req);
+		$query->execute();
+
+		$rows = $query->fetchAll();
+		if (count($rows) == 0)
+			return true;
+		else return false;
 	}
 }

@@ -123,31 +123,47 @@ insert into FICHIER values(0, ' ', ' ', ' ', ' ', ' ', 0, ' ', 0);
 --       Insertion : Ligne test
 -- -----------------------------------------------------------------------------
 
-REM INSERTING into PROJETSI.DROIT
+REM INSERTING into VALIDATION
 SET DEFINE OFF;
-Insert into PROJETSI.DROIT (ID_DROIT,ID_USER,ID_FICHIER,DROIT) values ('1','madecalf','74','1');
-Insert into PROJETSI.DROIT (ID_DROIT,ID_USER,ID_FICHIER,DROIT) values ('2','madecalf','76','1');
-REM INSERTING into PROJETSI.FICHIER
+REM INSERTING into FICHIER
 SET DEFINE OFF;
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('59','madecalf','L3App','L3App','Dossier des L3App','services','1','L3App','0');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('60','madecalf','Marketing Mix','Marketing Mix','Cours de Maketing Mix','services/L3App','1','L3App','59');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('61','siaydin','Reglement L3App','Reglement_L3App.doc','Reglement du service L3App','services/L3App','0','L3App','59');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('62','siaydin','Résultats net financiers','Resultats_net.xlsx','Resultats de l''entreprise','services/L3App','0','L3App','59');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('63','isoard','Cours 1 de MM','Cours1.doc','Cours 1 portant sur la demarche maketing','services/L3App/Marketing Mix','0','L3App','60');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('64','isoard','Cours 1 de MM','Cours2.doc','Cours 2 portant sur la demarche maketing','services/L3App/Marketing Mix','0','L3App','60');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('65','isoard','Cours 1 de MM','Cours3.doc','Cours 3 portant sur la demarche maketing','services/L3App/Marketing Mix','0','L3App','60');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('66','isoard','Cours 1 de MM','Cours4.doc','Cours 4 portant sur la demarche maketing','services/L3App/Marketing Mix','0','L3App','60');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('67','admin','rh','ressources_humaines','Dossier des rh','services','1','rh','0');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('68','isoard','Exercices de MM','Exercices','Exercices de Marketing','services/L3App/Marketing Mix','1','L3App','60');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('69','isoard','Corriges de MM','Corriges','Corriges de  Marketing','services/L3App/Marketing Mix/Exercices','1','L3App','68');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('70','isoard','Cours 1 de MM','exo1.doc','Exercice 1 portant sur la demarche maketing','services/L3App/Marketing Mix/Exercices','0','L3App','68');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('71','isoard','Cours 1 de MM','exo2.doc','Exercice 2 portant sur la demarche maketing','services/L3App/Marketing Mix/Exercices','0','L3App','68');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('74','isoard','Cours 1 de MM','exo2_corrige.doc','Corriges 2 portant sur la demarche maketing','services/L3App/Marketing Mix/Exercices/Corriges','0','L3App','69');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('75','admin','Dossier M1App','M1App','Dossier des M1App','services','1','M1App','0');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('76','admin','PRojets des M1 app','Projets','Projets des M1App','services/M1App','1','M1App','75');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('77','admin','Projet de C pour les M1App','projet_c.c','Projet de c des M1App','services/M1App/Projets','0','M1App','76');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('78','admin','Liste des eleves de M1App','liste_eleves_m1.doc','Listes des eleves de M1App','services/M1App','0','M1App','75');
-Insert into PROJETSI.FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('0',' ',' ',' ',' ',' ','0',' ','0');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('0',' ',' ',' ',' ',' ','0',' ','0');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('59','madecalf','L3App','L3App','Dossier des L3App','services','1','L3App','0');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('60','madecalf','Marketing Mix','Marketing Mix','Cours de Maketing Mix','services/L3App','1','L3App','59');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('61','siaydin','Reglement L3App','Reglement_L3App.doc','Reglement du service L3App','services/L3App','0','L3App','59');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('62','siaydin','Résultats net financiers','Resultats_net.xlsx','Resultats de l''entreprise','services/L3App','0','L3App','59');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('63','isoard','Cours 1 de MM','Cours1.doc','Cours 1 portant sur la demarche maketing','services/L3App/Marketing Mix','0','L3App','60');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('64','isoard','Cours 1 de MM','Cours2.doc','Cours 2 portant sur la demarche maketing','services/L3App/Marketing Mix','0','L3App','60');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('65','isoard','Cours 1 de MM','Cours3.doc','Cours 3 portant sur la demarche maketing','services/L3App/Marketing Mix','0','L3App','60');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('66','isoard','Cours 1 de MM','Cours4.doc','Cours 4 portant sur la demarche maketing','services/L3App/Marketing Mix','0','L3App','60');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('67','admin','rh','ressources_humaines','Dossier des rh','services','1','rh','0');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('68','isoard','Exercices de MM','Exercices','Exercices de Marketing','services/L3App/Marketing Mix','1','L3App','60');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('69','isoard','Corriges de MM','Corriges','Corriges de  Marketing','services/L3App/Marketing Mix/Exercices','1','L3App','68');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('70','isoard','Cours 1 de MM','exo1.doc','Exercice 1 portant sur la demarche maketing','services/L3App/Marketing Mix/Exercices','0','L3App','68');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('71','isoard','Cours 1 de MM','exo2.doc','Exercice 2 portant sur la demarche maketing','services/L3App/Marketing Mix/Exercices','0','L3App','68');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('74','isoard','Cours 1 de MM','exo2_corrige.doc','Corriges 2 portant sur la demarche maketing','services/L3App/Marketing Mix/Exercices/Corriges','0','L3App','69');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('75','admin','Dossier M1App','M1App','Dossier des M1App','services','1','M1App','0');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('76','admin','PRojets des M1 app','Projets','Projets des M1App','services/M1App','1','M1App','75');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('77','admin','Projet de C pour les M1App','projet_c.c','Projet de c des M1App','services/M1App/Projets','0','M1App','76');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('78','admin','Liste des eleves de M1App','liste_eleves_m1.doc','Listes des eleves de M1App','services/M1App','0','M1App','75');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('1','admin','liste personnel','liste_personnel.doc','Liste du personnel','services/ressources_humaines','0','rh','67');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('2','admin','fiches perso','fiches_perso','Dossier des fiches sur le personnel','services/ressources_humaines','1','rh','67');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('3','admin','resume fiche perso','resume_fiche.rtf','Resume fiches perso','services/ressources_humaines/fiches_perso','0','rh','2');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('4','admin','fiches l3app','fiches_L3App','Fiches des L3App','services/ressources_humaines/fiches_perso','1','rh','2');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('5','admin','fiches sur les l3App','l3App_fiches.txt','Fiches sur les L3App','services/ressources_humaines/fiches_perso/fiches_L3App','0','rh','4');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('6','noelmoja','fiche noelmoja','Fiche_noelmoja.doc','fiche sur noelmoja','services/L3App','0','L3App','59');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('7','madecalf','dossier inscription nanterre','DossierMiageP10-AydinSimon.rtf','dossier inscription nanterre','services/L3App','0','L3App','59');
+Insert into FICHIER (ID_FICHIER,ID_USER,LIBELLE,NOM,DESCRIPTION,PATHS,DOSSIER,SERVICE,PARENTS) values ('12','madecalf','Ljkfsd','DossierMiageP10-AydinSimon.rtf','Ljkfsd','services/M1App/Projets','0','L3App','76');
+REM INSERTING into FAIRE
+SET DEFINE OFF;
+REM INSERTING into DROIT
+SET DEFINE OFF;
+Insert into DROIT (ID_DROIT,ID_USER,ID_FICHIER,DROIT) values ('1','madecalf','74','1');
+Insert into DROIT (ID_DROIT,ID_USER,ID_FICHIER,DROIT) values ('2','madecalf','76','2');
+Insert into DROIT (ID_DROIT,ID_USER,ID_FICHIER,DROIT) values ('3','siaydin','4','1');
+REM INSERTING into DEMANDE_EXTENSION
+SET DEFINE OFF;
+Insert into DEMANDE_EXTENSION (ID_DEMANDE,ID_FICHIER,ID_USER,STATUT,DROIT) values ('1','76','madecalf','0','1');
 
 
 -- -----------------------------------------------------------------------------

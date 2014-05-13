@@ -10,6 +10,13 @@
         $("#wrapper").toggleClass("active");
     });
     </script>
+
+    <script>
+    $(function()
+    {
+        $('#creatdossier').hide();
+    });
+    </script>
 </body>
 
 </html>

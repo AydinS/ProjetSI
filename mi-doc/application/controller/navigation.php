@@ -2,23 +2,26 @@
 
 class Navigation extends Controller
 {
-
+	/**
+	* Fonction appellée quand on clique sur Navigation dans le menu à gauche
+	*
+	*/
 	public function index(){
 		
 		//echo $_SESSION['service'];
 		require 'application/views/_templates/header.php';
 		if(isset($_SESSION['SERVICE'])){
 			//si user connectÃ© et si on connait le service de l'utilisateur
-			// on instancie le model navigationmodel pour rÃ©cup les fichier de la racine de son service
+			// on instancie le model navigationmodel pour récup les fichier de la racine de son service
 			$navModel = $this->loadModel('navigationmodel');
-			// on rÃ©cupÃ¨re l'id de la racine du service pour ensuite faire un readdir et une requete renvoyant tous les fichier qui ont pour parent l'id 
+			//on récupère l'id du service de l'utilisateur
 			$infoService = $navModel->getServiceId($_SESSION['SERVICE'],$_SESSION['uid']);
-			if($infoService != -1){// on a bien rÃ©cupÃ©rer l'id service
+			if($infoService != -1){// on a bien récupéré l'id service
 				
 				$path = __DIR__.'../../'.RACINE.$_SESSION['SERVICE'];
 				
 				$nomDossier = $navModel->getCurrentLocation(RACINE.$_SESSION['SERVICE'],$infoService['ID_FICHIER']);
-				
+				//on affiche tous les fichiers du service
 				$fichiers = $navModel->getAllFilesByParents($infoService['ID_FICHIER'],$_SESSION['uid']);
 				$_SESSION['CURR_DIR_PATH'] = $path;
 				$_SESSION['CURR_DIR_ID'] = $infoService['ID_FICHIER'];
@@ -35,8 +38,8 @@ class Navigation extends Controller
 	}
 	
 	/**
-	* Fonction appellÃ©e quand on clique sur un dossier de la liste de fichiers
-	* Fonction va se rendre dans le parent du fichier qui a pour ID idfic
+	* Fonction appellée quand on clique sur un dossier de la liste des fichiers
+	* param : l'id fichier
 	*/
 	public function displaycontent($idfic){
 		require 'application/views/_templates/header.php';
@@ -46,10 +49,10 @@ class Navigation extends Controller
 			$navModel = $this->loadModel('navigationmodel');
 			//rÃ©cupÃ¨re les infos du dossier que l'utilisateur veut consulter
 			$infoService = $navModel->getFilesInfoByIdFic($idfic);
-			//ici on teste si l'utilisateur Ã  les droits sur le fichier d'id idfic et s'il n'a pas les droits on le redirige on sort de la fonction par un return
-			
 			$path = $infoService['PATH'];
+			//on récupère le chemin vers dossier courant
 			$nomDossier = $navModel->getCurrentLocation($infoService['PATH'],$idfic);//
+			//on récupère tous les fichiers du dossier
 			$fichiers = $navModel->getAllFilesByParents($infoService['PARENT'],$_SESSION['uid']);	
 			$_SESSION['CURR_DIR_PATH'] = $path;
 			$_SESSION['CURR_DIR_ID'] = $infoService['PARENT'];
@@ -63,8 +66,7 @@ class Navigation extends Controller
 	}
 	
 	/**
-	* Fonction appellÃ©e quand on clique sur un dossier qui compose le chemin vers le dossier courant 
-	* 	
+	* Fonction appellée quand on clique sur un dossier qui compose le chemin vers le dossier courant 
 	*/
 	public function goToDirectory(){
 		
@@ -72,10 +74,10 @@ class Navigation extends Controller
 		if(isset($_POST['gotodirectory']) && isset($_POST['idfic'])){
 			$navModel = $this->loadModel('navigationmodel');
 			$infoService = $navModel->getFilesInfoByIdFic((int)$_POST['idfic'],$_SESSION['uid']);
-			//ici on teste si l'utilisateur Ã  les droits sur le fichier d'id idfic et s'il n'a pas les droits on le redirige on sort de la fonction par un return
-			
 			$path = __DIR__.'../../'.$_POST['gotodirectory'];
+			//on récupère le chemin vers dossier courant
 			$nomDossier = $navModel->getCurrentLocation((string)$_POST['gotodirectory'],(int)$_POST['idfic']);
+			//on récupère tous les fichiers du dossier
 			$fichiers = $navModel->getAllFilesByParents((int)$_POST['idfic'],$_SESSION['uid']);
 			$_SESSION['CURR_DIR_PATH'] = $path;
 			$_SESSION['CURR_DIR_ID'] = $_POST['idfic'];
@@ -88,8 +90,8 @@ class Navigation extends Controller
 	}
 	
 	/**
-	* Fonction appellÃ©e pour aller vers le dosssier d'ID idDossier
-	* 
+	* Fonction appellée pour aller vers le dosssier d'ID idDossier
+	* param : l'id dossier
 	*/
 	public function goToFolder($idDossier){
 		
@@ -97,10 +99,10 @@ class Navigation extends Controller
 		if(isset($idDossier)){
 			$navModel = $this->loadModel('navigationmodel');
 			$infoService = $navModel->getFilesInfoByIdFic($idDossier,$_SESSION['uid']);
-			//ici on teste si l'utilisateur Ã  les droits sur le fichier d'id idfic et s'il n'a pas les droits on le redirige on sort de la fonction par un return
-			
+			//on récupère le chemin vers dossier courant
 			$path = __DIR__.'../../'.$infoService['PATH'].'/'.$infoService['NOM'];
 			$nomDossier = $navModel->getCurrentLocation((string)$infoService['PATH'].'/'.$infoService['NOM'],$idDossier);
+			//on récupère tous les fichiers du dossier
 			$fichiers = $navModel->getAllFilesByParents((int)$idDossier,$_SESSION['uid']);
 			$_SESSION['CURR_DIR_PATH'] = $path;
 			$_SESSION['CURR_DIR_ID'] = $idDossier;
@@ -113,8 +115,8 @@ class Navigation extends Controller
 	}
 	
 	/**
-	* Fonction qui va afficher les dossier extÃ©rieurs (au service de l'utilisateur coonectÃ©) partagÃ©s avec l'utilisateur
-	* 
+	* Fonction qui va afficher les dossier extérieurs (au service de l'utilisateur coonecté) partagés avec l'utilisateur
+	* appellée quand on clique sur Dossiers partagées
 	*/
 	public function displaySharedFiles(){
 		
@@ -136,7 +138,7 @@ class Navigation extends Controller
 	
 	
 	/**
-	* Fonction appellÃ©e quand on clique sur le bouton supprimer 
+	* Fonction appellée quand on clique sur le bouton supprimer 
 	*
 	*/
 	public function DeleteFileNavigation()
@@ -233,6 +235,35 @@ class Navigation extends Controller
 		}
         require 'application/views/_templates/footer.php';
 	}
+
+
+	/**
+	 * Créateur : EJA
+	 * MàJ : 11/05/2014
+     * Methode: creerDossier
+     * Comportement : Créée un dossier puis affiche le dossier qui contient le nouveau dossier créé
+     * Paramètres IN : void
+     * Paramètres OUT : void
+     * Page IN possibles : views/naviguation/index.php
+     * Page out possibles : views/naviguation/index.php
+     */
+    public function creerDossier()
+    {
+        //Traitements 
+        // 1] creer le dossier
+        if(isset($_POST['nomDoss']) && isset($_POST['descDoss'])){//on test si les données rentrée par l'utilisateur existent
+       		$dossierModel = $this->loadModel('navigationmodel');
+        	if($dossierModel->dossierExists($_POST['nomDoss'],$_SESSION['CURR_DIR_SERVICE']))//on test si un dossier avc le même nom n'existe pas deja
+            	$dossierModel->creerDossier($_SESSION['CURR_DIR_PATH'],$_POST['nomDoss'],$_POST['descDoss'],$_SESSION['uid'],$_SESSION['CURR_DIR_ID'],$_SESSION['SERVICE']);
+            else
+            	$erreurCreatDoss = "Un dossier du même nom existe dejà";
+        }
+        else
+            $erreurCreatDoss = "Les informations renseignées ne sont pas valides";
+        // 2] Afficher la page ayant appelé la création de dossier
+        header('location:'.URL.'navigation/goToFolder/'.$_SESSION['CURR_DIR_ID'].'');
+    }
+
 }
 
 

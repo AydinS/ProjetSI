@@ -46,10 +46,31 @@
 					//Affichages des boutons de création et d'upload dans le dossier courant
 					if((isset($_SESSION['RESPONSABLE']) and $_SESSION['RESPONSABLE'] == true and isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['CURR_DIR_SERVICE'] == $_SESSION['SERVICE']) || (isset($droit) and $droit != BLOCK and (isset($_SESSION['CURR_DIR_ID']) and isset($droit) and $droit == MODIF) || (isset($_SESSION['SERVICE']) && isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['SERVICE'] == $_SESSION['CURR_DIR_SERVICE']))) {echo '<a href="'.URL.'navigation/uploadto/?parent='.$_SESSION['CURR_DIR_ID'].'&chemin='.$chemin.'" class="btn btn-default" role="button"><span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;Upload</a>&nbsp;&nbsp;&nbsp;';}
 					
-					if((isset($_SESSION['RESPONSABLE']) and $_SESSION['RESPONSABLE'] == true and isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['CURR_DIR_SERVICE'] == $_SESSION['SERVICE']) || (isset($droit) and $droit != BLOCK and (isset($_SESSION['CURR_DIR_ID']) and isset($droit) and $droit == MODIF) || (isset($_SESSION['SERVICE']) && isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['SERVICE'] == $_SESSION['CURR_DIR_SERVICE']))) {echo '<a href="'.URL.'navigation/createDir/'.$_SESSION['CURR_DIR_ID'].'" class="btn btn-success" role="button"><span class="glyphicon glyphicon-plus"></span>&nbsp;Creer dossier</a> <br/>';}
+					//MANU  ligne 48 Dans "Affichages des boutons de création et d'upload dans le dossier courant" apres le 1er if
+					if((isset($_SESSION['RESPONSABLE']) and $_SESSION['RESPONSABLE'] == true and isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['CURR_DIR_SERVICE'] == $_SESSION['SERVICE']) || (isset($droit) and $droit != BLOCK and (isset($_SESSION['CURR_DIR_ID']) and isset($droit) and $droit == MODIF) || (isset($_SESSION['SERVICE']) && isset($_SESSION['CURR_DIR_SERVICE']) and $_SESSION['SERVICE'] == $_SESSION['CURR_DIR_SERVICE']))) {echo '<a href="javascript:showHide();" class="btn btn-success" role="button"><span id="dirIcon" class="glyphicon glyphicon-plus"></span>&nbsp;Créer dossier</a>&nbsp;&nbsp;&nbsp;';}
 					else echo'<br/>';
 				?>
                 <!--<h3 class="panel-title">Fichiers</h3>-->
+				
+                <!--MANU  ligne 54 Après "Affichages des boutons de création et d'upload dans le dossier courant" et avant le bouton de filtre-->
+                <div id="creatdossier" class="">
+					<table class="table">
+	            		<tbody>
+			                <tr>
+			                	<?php
+			                	//Vu qu'on a une redirection, $erreurCreatDoss n'est jamais initialisé donc les tests et differents affichages ne servent à rien...mais je laisse quand même
+			                	if(isset($erreurCreatDoss)){$placeholder1 = $erreurCreatDoss;$placeholder2 = $erreurCreatDoss;}
+			                	else{$placeholder1 = "Nom du nouveau dossier";$placeholder2 = "Description du nouveau dossier";}
+			                	echo '<form action="'.URL.'navigation/creerDossier" method="POST">';
+				                    echo '<td><input type="text" class="form-control" placeholder="'.$placeholder1.'" name = "nomDoss" required ></td>';
+				                    echo '<td><input type="text" class="form-control" placeholder="'.$placeholder2.'" name = "descDoss" required></td>';
+				                    echo '<td><button type="submit" name="creatfolder" class="btn btn-success" role="button">&nbsp;Valider&nbsp;</button></td>';
+			                	echo '</form>';
+			                	?>
+			                </tr>
+	            		</tbody>
+					</table>
+				</div>
 				
                 <div class="pull-right">
                     <button class="btn btn-default btn-xs btn-filter"><span class="glyphicon glyphicon-filter"></span> Filter</button>
@@ -63,7 +84,9 @@
                         <th><input type="text" class="form-control" placeholder="Propriétaire" disabled></th>
                         <th><input type="text" class="form-control" placeholder="Nom" disabled></th>
                         <th><input type="text" class="form-control" placeholder="Description" disabled></th>
-                        <th><input type="text" class="form-control" placeholder="Action" disabled></th>
+                        <th>Action</th>
+						<th></th>
+						<th><input type="text" class="form-control" placeholder="Statut" disabled></th>
                     </tr>
                 </thead>
 			<tbody>
@@ -122,6 +145,13 @@
 							echo '</form>';
 						}
 						echo '</td>';
+						
+						echo '<td>'.$fichiers[$i]['STATUT'].'</td>';
+						//STATUT DU FICHIER
+						//echo '<td>';
+						//echo $fichiers[$i]['STATUT'];
+						//echo '</td>';
+						
 						echo '</tr>';
 					}
 				}

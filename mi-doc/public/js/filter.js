@@ -44,3 +44,17 @@ $(document).ready(function(){
         }
     });
 });
+
+function showHide()
+{
+	if($('#creatdossier').is(':visible')){
+		$('#creatdossier').hide();
+		$("#dirIcon").parent().attr("class","btn btn-success");
+		$("#dirIcon").attr('class', 'glyphicon glyphicon-plus');
+	}
+	else{
+		$("#dirIcon").attr('class', 'glyphicon glyphicon-minus');
+		$("#dirIcon").parent().attr("class","btn btn-danger");
+		$('#creatdossier').show();
+	}
+}

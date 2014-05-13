@@ -28,33 +28,22 @@
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
-                <li class="sidebar-brand" <?php if(isset($_SESSION)) echo 'style="color:blue;" '; ?>><a href="#">Start E-DOC!</a>
+                <li class="sidebar-brand"><a href="#" <?php if(isset($_SESSION['uid'])) echo 'style="color:#0099FF;" '; ?> >Start E-DOC!</a>
                 </li>
 				<?php
 					if(!isset($_SESSION['cn'])){ 
 						echo '<li><a href="'.URL.'connexion/index">Connexion</a></li>';
 					}
 					else{
-						echo '<li style="color:green;">Bienvenu '.$_SESSION['cn'].'</li>';
-						echo '<li><a href="'.URL.'connexion/logout">Déconnexion</a></li>';
-						echo '<li><a href="'.URL.'navigation/index">Navigation</a>';
-						echo '<li><a href="'.URL.'navigation/displaySharedFiles">Dossiers partages</a>';
-						echo '<li><a href="'.URL.'extensionDroit/demanderExtension">Demander une extension</a>';
-						if($_SESSION['RESPONSABLE']) echo '<li><a href="'.URL.'extensionDroit/demandeEnAttente">Demande d\'extension de droit</a>';
+						echo '<li style="color:#33D633;">'.$_SESSION['cn'].'</li>';
+						echo '<li><a href="'.URL.'navigation/index">Navigation</a></li>';
+						echo '<li><a href="'.URL.'navigation/displaySharedFiles">Dossiers partages</a></li>';
+						echo '<li><a href="'.URL.'extensionDroit/demanderExtension">Demander une extension</a></li>';
+                        echo '<li><a href="'.URL.'rechercher/formRechercher">Rechercher un fichier</a></li>';
+						if($_SESSION['RESPONSABLE']) echo '<li><a href="'.URL.'extensionDroit/demandeEnAttente">Demande d\'extension de droit</a></li>';
+						echo '<li><a style="color:#FF5C33;" href="'.URL.'connexion/logout">Déconnexion</a></li>';
 					}
 				?>
                 <!--<li><a href="<?php //echo URL.'contacts/index'; ?>">Contacts</a>-->
-                </li>
-                </li>
-                <li><a href="#">Overview</a>
-                </li>
-                <li><a href="#">Events</a>
-                </li>
-                <li><a href="#">About</a>
-                </li>
-                <li><a href="#">Services</a>
-                </li>
-                <li><a href="#">Contact</a>
-                </li>
             </ul>
         </div>
