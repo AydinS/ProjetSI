@@ -110,7 +110,7 @@ class NavigationModel
 			if(count($res) > 0)
 				return 'En Attente';
 			
-			$reqFaireVal = "SELECT count (ID_VALIDATION) as nbVal, SUM(STATUT) as sumstatut FROM FAIRE WHERE ID_VALIDATION = :idval and STATUT = 1";
+			$reqFaireVal = "SELECT count (ID_VALIDATION) as nbVal, SUM(STATUT) as sumstatut FROM FAIRE WHERE ID_VALIDATION = :idval";
 			$query = $this->db->prepare($reqFaireVal);
 			$query->execute(array(':idval' => $infos['ID_VALIDATION']));
 			$res = $query->fetchAll();
