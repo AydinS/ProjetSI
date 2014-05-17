@@ -41,4 +41,11 @@ class FaireModel
 		return $query->fetchAll();
 	}
 	
+	function insertFaire($validation, $user)
+	{
+		$req = "INSERT INTO FAIRE(ID_VALIDATION, ID_USER) VALUES('".$validation."','".$user."')";
+		$query = $this->db->prepare($req);
+		$query->execute();
+	}
+	
 }

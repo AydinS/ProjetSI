@@ -172,6 +172,11 @@ class Navigation extends Controller
 		
 		if(isset($_POST['modif'])) $modif = $_POST['modif'];
 		else if(isset($_GET['modif'])) $modif = $_GET['modif'];
+		$service = $_SESSION['SERVICE'];
+		
+		$ldapModel = $this->loadModel('LdapModel');
+		$allUser = $ldapModel->SearchAllUserService($service);	
+		
 		
 		if(isset($_POST['description']))
 		{
@@ -180,45 +185,87 @@ class Navigation extends Controller
 			$description = $_POST['description'];
 			
 			$dossier = 0;
-			$service = $_SESSION['SERVICE'];
 			$fichier = $_FILES['uploadfile']['name'];			
+			
 			
 			$path = __DIR__.$chemin;
 			$path = str_replace('/', '\\', $path);
 			$path = str_replace('\\controller', '', $path);
 			$chemin = str_replace('/services', 'services', $chemin);
 			
-			
 			$navModel = $this->loadModel('navigationmodel');
+			$exist = $navModel->dossierExists($fichier, $chemin);
 			
-			if(isset($modif) && $modif!="")
+			
+			if($exist == false)
 			{
-				if(isset($_POST['fic'])) $fic = $_POST['fic'];
-				else $fic = $_GET['fic'];
+				echo '<div class="alert alert-danger">';
+					echo 'L\'upload n\'a pas eu lieu car le nom de fichier "'.$fichier.'" existe déjà dans le répertoire "'.$chemin.'"!';
+				echo '</div>';
 				
-				$infoService = $navModel->updateUploadFile($fic, $uid, $description, $fichier, $chemin);
+				require 'application/views/navigation/form_upload.php';
 			}
 			else
 			{
-				$infoService = $navModel->uploadFile($uid, $description, $fichier, $chemin, $dossier, $service, $parent);
+				if(isset($modif) && $modif!="")
+				{
+					if(isset($_POST['fic'])) $fic = $_POST['fic'];
+					else $fic = $_GET['fic'];
+					
+					$infoService = $navModel->updateUploadFile($fic, $uid, $description, $fichier, $chemin);
+					
+					if(isset($_POST['list_checked'])) //Demande de validation lors d'un update
+					{
+						$valModel = $this->loadModel('validationmodel');
+						$insertVal = $valModel->insertValidation($fic, $uid);
+						
+						$getVal = $valModel->getIdValidation($fic, $uid);
+						
+						$faireModel = $this->loadModel('fairemodel');
+						foreach($_POST['list_checked'] as $list_checked)
+						{
+							$insertFaire = $faireModel->insertFaire($getVal, $list_checked);
+						}
+					}
+				}
+				else
+				{
+					$infoService = $navModel->uploadFile($uid, $description, $fichier, $chemin, $dossier, $service, $parent);
+					
+					if(isset($_POST['list_checked'])) //Demande de validation lors d'un update
+					{
+						$fic = $navModel->getIdFichierWithAllInfo($uid, $fichier, $chemin, $dossier, $service, $parent);
+						echo "L'id du fichier est $fic";
+						$valModel = $this->loadModel('validationmodel');
+						$insertVal = $valModel->insertValidation($fic, $uid);
+						
+						$getVal = $valModel->getIdValidation($fic, $uid);
+						
+						$faireModel = $this->loadModel('fairemodel');
+						foreach($_POST['list_checked'] as $list_checked)
+						{
+							$insertFaire = $faireModel->insertFaire($getVal, $list_checked);
+						}
+					}
+				}
+				
+				echo '<div class="container text-left" >'.'<legend>Upload :'.$_FILES['uploadfile']['name'].'</legend>';
+				if(move_uploaded_file($_FILES['uploadfile']['tmp_name'], $path.'\\'.$fichier))
+				{
+						echo '<div class="alert alert-success">';
+							echo 'Upload effectué avec succès !';
+						echo '</div>';
+				}
+				else //Sinon (la fonction renvoie FALSE).
+				{
+						echo '<div class="alert alert-danger">';
+							echo 'Echec de l\'upload !';
+						echo '</div>';
+				}
+				echo '</div>';
+				
+				header('location:'.URL.'navigation/goToFolder/'.$parent.'');
 			}
-			
-			echo '<div class="container text-left" >'.'<legend>Upload :'.$_FILES['uploadfile']['name'].'</legend>';
-			if(move_uploaded_file($_FILES['uploadfile']['tmp_name'], $path.'\\'.$fichier))
-			{
-				  	echo '<div class="alert alert-success">';
-				  		echo 'Upload effectué avec succès !';
-					echo '</div>';
-			}
-			else //Sinon (la fonction renvoie FALSE).
-			{
-				  	echo '<div class="alert alert-danger">';
-				  		echo 'Echec de l\'upload !';
-					echo '</div>';
-			}
-			echo '</div>';
-			
-			header('location:'.URL.'navigation/goToFolder/'.$parent.'');
 		}
 		else
 		{

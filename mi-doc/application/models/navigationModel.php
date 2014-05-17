@@ -96,20 +96,37 @@ class NavigationModel
 				$infos['ID_VALIDATION'] = $v->ID_VALIDATION;
 			}
 			//récupère la somme des validation
-			$reqFaireVal = "SELECT * FROM VALIDATION WHERE ID_VALIDATION = :idval and ID_FICHIER :idfic and statut = 2";
+			$reqFaireVal = "SELECT * FROM FAIRE WHERE ID_VALIDATION = :idval and STATUT=2";
 			$query = $this->db->prepare($reqFaireVal);
-			$query->execute(array(':idval' => $infos['ID_VALIDATION'],":idfic" => $idfic));
+			$query->execute(array(':idval' => $infos['ID_VALIDATION']));
 			$res = $query->fetchAll();
 			if(count($res) > 0)
 				return 'Refuse';
 			//
-			$reqFaireVal = "SELECT * FROM VALIDATION WHERE ID_VALIDATION = :idval and ID_FICHIER :idfic and statut = 0";
-			$query = $this->db->prepare($reqVal);
-			$query->execute(array(':idval' => $infos['ID_VALIDATION'],":idfic" => $idfic));
+			$reqFaireVal = "SELECT * FROM FAIRE WHERE ID_VALIDATION = :idval and STATUT = 0";
+			$query = $this->db->prepare($reqFaireVal);
+			$query->execute(array(':idval' => $infos['ID_VALIDATION']));
 			$res = $query->fetchAll();
 			if(count($res) > 0)
-				return 'Attente';
-			return 'Valide';
+				return 'En Attente';
+			
+			$reqFaireVal = "SELECT count (ID_VALIDATION) as nbVal, SUM(STATUT) as sumstatut FROM FAIRE WHERE ID_VALIDATION = :idval and STATUT = 1";
+			$query = $this->db->prepare($reqFaireVal);
+			$query->execute(array(':idval' => $infos['ID_VALIDATION']));
+			$res = $query->fetchAll();
+			$nbval = 0;
+			$sval = -1;
+			$c = count($res);
+			if(count($res) > 0){
+				foreach($res as $r){
+					$nbval = $r->NBVAL;
+					$sval = $r->SUMSTATUT;
+				}
+				if($nbval == $sval)
+					return 'Valide';
+			
+			}
+			return 'En attente';
 			
 		}else{
 			return '';
@@ -429,5 +446,21 @@ class NavigationModel
 		if (count($rows) == 0)
 			return true;
 		else return false;
+	}
+	
+	function getIdFichierWithAllInfo($uid, $fichier, $chemin, $dossier, $service, $parent)
+	{
+		$req = "SELECT * FROM FICHIER WHERE ID_USER='".$uid."' and NOM='".$fichier."' and PATHS='".$chemin."' and SERVICE='".$service."' and PARENTS=$parent";
+		$query = $this->db->prepare($req);
+		$query->execute();
+		
+		$res = $query->fetchAll();
+		foreach($res as $r){
+			$infos = $r->ID_FICHIER;
+		}
+		
+		if(count($res) > 0){
+			return $infos;
+		}else return 0;
 	}
 }

@@ -262,7 +262,7 @@ public  function Connexion($uid,$password)
 			
 			if($i>0 && strlen($uid_user) < 8)
 			{
-				for($j=0;$j<strlen($compo) && strlen($uid_user) < 8 ;$j++)
+				for($j=0;$j<strlen($compo);$j++)
 				{
 					$uid_user = $uid_user.$compo[$j];
 				}
@@ -326,5 +326,20 @@ public  function Connexion($uid,$password)
 			return true;
 		else
 			return false;
+	}
+	
+	public function SearchAllUserService($service)
+	{
+		$ds=$this->ldapCon;
+		
+		//Recherche du service de l'utilisateur
+		$result = ldap_search($ds,SERVICES_TREE, '(&(objectClass=groupOfUniqueNames)(uniqueMember=uid=*)(cn='.$service.'))');
+		
+		$group = ldap_get_entries($ds, $result);
+		
+		if($group["count"] > 0)
+			return $group;
+		else
+			return 0;
 	}
 }
