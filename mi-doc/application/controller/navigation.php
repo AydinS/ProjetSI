@@ -214,7 +214,7 @@ class Navigation extends Controller
 					
 					$infoService = $navModel->updateUploadFile($fic, $uid, $description, $fichier, $chemin);
 					
-					if(isset($_POST['list_checked'])) //Demande de validation lors d'un update
+					if(isset($_POST['list_checked']) && isset($_POST['singlebutton2'])) //Demande de validation lors d'un update
 					{
 						$valModel = $this->loadModel('validationmodel');
 						$insertVal = $valModel->insertValidation($fic, $uid);
@@ -232,7 +232,7 @@ class Navigation extends Controller
 				{
 					$infoService = $navModel->uploadFile($uid, $description, $fichier, $chemin, $dossier, $service, $parent);
 					
-					if(isset($_POST['list_checked'])) //Demande de validation lors d'un update
+					if(isset($_POST['list_checked']) && isset($_POST['singlebutton2'])) //Demande de validation lors d'un update
 					{
 						$fic = $navModel->getIdFichierWithAllInfo($uid, $fichier, $chemin, $dossier, $service, $parent);
 						echo "L'id du fichier est $fic";
