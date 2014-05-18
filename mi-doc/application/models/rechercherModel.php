@@ -117,4 +117,58 @@ class rechercherModel
 
     	return $where;
     }
+
+    /**
+     * Créateur : EJA
+     * MàJ : 18/05/2014
+     * Methode: getAllIdFichierExt
+     * Comportement : Récupère tous les fichiers contenus dans les dossiers patagés
+     * Paramètres IN : 1) l'accès aux fonctions du modèle naviguation 2) l'utilisateur connecté
+     * Paramètres OUT : Une chaine de caractère sous la forme : (idFic, idFic, idFic)
+     * Page IN possibles : controller/rechercher.php->effectuerRecherche()
+     * Page out possibles : N/A
+     */
+    public function getAllIdFichierExt($navModel,$iduser){
+            $idFichiersPartages = array();
+            $nbIdFic=0;
+            $test = array();
+
+            $dossiers = $navModel->getAllSharedFolders($iduser);
+
+            for($i=0;$i<count($dossiers);$i++){
+                
+                $test = $navModel->getAllFilesNotFolder($dossiers[$i]['ID_FICHIER'],0);
+                for($cpt1 = 0;$cpt1<count($test);$cpt1++){
+                    $idFichiersPartages[$nbIdFic]['id'] = $test[$cpt1]['ID_FICHIER'];
+                    $nbIdFic++;
+                }
+                $sousDossier=$navModel->getAllFoldersFrom($dossiers[$i]['ID_FICHIER'], null);
+
+                while($sousDossier > 0)
+                {
+                    for($j=0;$j<count($sousDossier);$j++)
+                    {
+                        $ssdos = $sousDossier[$j]['ID_FICHIER'];
+                        $sousDossier=$navModel->getAllFoldersFrom($sousDossier[$j]['ID_FICHIER'], null);
+                        $test = $navModel->getAllFilesNotFolder($ssdos,0);
+                        for($cpt1 = 0;$cpt1<count($test);$cpt1++){
+                            $idFichiersPartages[$nbIdFic]['id'] = $test[$cpt1]['ID_FICHIER'];
+                            $nbIdFic++;
+                        }
+                    }
+                }
+            }
+            
+            if(count($idFichiersPartages) > 0){
+                $id = '( '.$idFichiersPartages[0]['id'];
+                
+                for($l=1;$l<count($idFichiersPartages);$l++){
+                    $id = $id.', '.$idFichiersPartages[$l]['id'];
+                }
+                $id = $id.' )';    
+            }
+            
+            return $id;
+            
+        }
 }

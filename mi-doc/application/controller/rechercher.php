@@ -23,7 +23,7 @@ class Rechercher extends Controller
 }
         /**
          * Créateur : EJA
-         * MàJ : 11/05/2014
+         * MàJ : 18/05/2014
          * Methode: effectuerRecherche
          * Comportement : Cherche les fichiers téléchargeables selon les critères rentrés par l'utilisateur puis affiche les resultats de la recherche
          * Paramètres IN : void
@@ -31,32 +31,39 @@ class Rechercher extends Controller
          * Page IN possibles : views/rechercher/index.php
          * Page out possibles : views/rechercher/index.php
          */
-    	public function effectuerRecherche(){
-    		if(isset($_POST['searchMotCle']) && isset($_POST['searchAuteur']) && isset($_POST['searchExt']))
-    		{
-    			if($_POST['searchMotCle'] != "" || $_POST['searchAuteur'] != "" || $_POST['searchExt'] != ""){//Si au moins un des champs est renseigné
-    				$rechercherModel = $this->loadModel('rechercherModel');
+        public function effectuerRecherche(){
+            if(isset($_POST['searchMotCle']) && isset($_POST['searchAuteur']) && isset($_POST['searchExt']))
+            {
+                if($_POST['searchMotCle'] != "" || $_POST['searchAuteur'] != "" || $_POST['searchExt'] != ""){//Si au moins un des champs est renseigné
+                    $rechercherModel = $this->loadModel('rechercherModel');
+                    $naviguationModel = $this->loadModel('navigationmodel');
 
                     //Initialisation des variables
-    				$iduser = $_SESSION['uid'];
-    				$idservice = $_SESSION['SERVICE'];
-    				$resultService = array();//Accueil tous les résultats des fichiers téléchargeable de son service
-    				$resultExt = array();//Accueil tous les résultats des fichiers téléchargeables de services exterieurs et accessibles
-    				
-                    //Construction de la requète à partir des renseignement passés en paramètre
-    				$where = $rechercherModel->construireReq($_POST['searchMotCle'],$_POST['searchAuteur'],$_POST['searchExt']);//Partie communes au requetes
-    				$reqExt = "SELECT * FROM DROIT dr, FICHIER fi $where AND fi.DOSSIER = 0 AND dr.ID_USER='$iduser' AND dr.DROIT = '1' AND dr.ID_FICHIER=fi.ID_FICHIER AND fi.SERVICE<>'$idservice'";
-    				$reqService = "SELECT * FROM FICHIER fi $where AND fi.SERVICE = '$idservice' AND fi.DOSSIER = 0";
+                    $iduser = $_SESSION['uid'];
+                    $idservice = $_SESSION['SERVICE'];
+                    $resultService = array();//Accueil tous les résultats des fichiers téléchargeable de son service
+                    $resultExt = array();//Accueil tous les résultats des fichiers téléchargeables de services exterieurs et accessibles
+                    
+                    //Construction de la requète à partir des renseignements passés en paramètre
+                    $where = $rechercherModel->construireReq($_POST['searchMotCle'],$_POST['searchAuteur'],$_POST['searchExt']);//Partie communes au requetes
+                    $in = $rechercherModel->getAllIdFichierExt($naviguationModel,$iduser);
 
-    				//Execution des requetes
-    				$resultExt = $rechercherModel->recupererAllFichiers($reqExt);
-    				$resultService = $rechercherModel->recupererAllFichiers($reqService);
-    			}
-    		}
-    		require 'application/views/_templates/header.php';
-			require 'application/views/rechercher/index.php';
-			require 'application/views/_templates/footer.php';
 
-    	}
+                    $reqExt = "SELECT * FROM FICHIER fi $where AND fi.ID_FICHIER IN $in";
+                    $reqService = "SELECT * FROM FICHIER fi $where AND fi.SERVICE = '$idservice' AND fi.DOSSIER = 0";
+
+                    
+                    //Execution des requetes
+                    $resultExt = $rechercherModel->recupererAllFichiers($reqExt);
+                    $resultService = $rechercherModel->recupererAllFichiers($reqService);
+                    
+                }
+            }
+
+            require 'application/views/_templates/header.php';
+            require 'application/views/rechercher/index.php';
+            require 'application/views/_templates/footer.php';
+
+        }
 
 }

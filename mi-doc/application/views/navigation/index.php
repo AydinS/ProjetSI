@@ -64,6 +64,8 @@
 			                	echo '<form action="'.URL.'navigation/creerDossier" method="POST">';
 				                    echo '<td><input type="text" class="form-control" placeholder="'.$placeholder1.'" name = "nomDoss" required ></td>';
 				                    echo '<td><input type="text" class="form-control" placeholder="'.$placeholder2.'" name = "descDoss" required></td>';
+				                    echo '<td><input type ="hidden" name="truePath" value="'.$chemin.'"></td>';
+				                    echo '<td><input type ="hidden" name="trueCurrID" value="'.$_SESSION['CURR_DIR_ID'].'"></td>';
 				                    echo '<td><button type="submit" name="creatfolder" class="btn btn-success" role="button">&nbsp;Valider&nbsp;</button></td>';
 			                	echo '</form>';
 			                	?>
@@ -86,7 +88,7 @@
                         <th><input type="text" class="form-control" placeholder="Description" disabled></th>
                         <th>Action</th>
 						<th></th>
-						<th><input type="text" class="form-control" placeholder="Statut" disabled></th>
+						<th>Statut</th>
                     </tr>
                 </thead>
 			<tbody>

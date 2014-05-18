@@ -286,7 +286,7 @@ class Navigation extends Controller
 
 	/**
 	 * Créateur : EJA
-	 * MàJ : 11/05/2014
+	 * MàJ : 18/05/2014
      * Methode: creerDossier
      * Comportement : Créée un dossier puis affiche le dossier qui contient le nouveau dossier créé
      * Paramètres IN : void
@@ -301,14 +301,14 @@ class Navigation extends Controller
         if(isset($_POST['nomDoss']) && isset($_POST['descDoss'])){//on test si les données rentrée par l'utilisateur existent
        		$dossierModel = $this->loadModel('navigationmodel');
         	if($dossierModel->dossierExists($_POST['nomDoss'],$_SESSION['CURR_DIR_SERVICE']))//on test si un dossier avc le même nom n'existe pas deja
-            	$dossierModel->creerDossier($_SESSION['CURR_DIR_PATH'],$_POST['nomDoss'],$_POST['descDoss'],$_SESSION['uid'],$_SESSION['CURR_DIR_ID'],$_SESSION['SERVICE']);
+            	$dossierModel->creerDossier($_POST['truePath'],$_SESSION['CURR_DIR_PATH'],$_POST['nomDoss'],$_POST['descDoss'],$_SESSION['uid'],$_POST['trueCurrID'],$_SESSION['SERVICE']);
             else
             	$erreurCreatDoss = "Un dossier du même nom existe dejà";
         }
         else
             $erreurCreatDoss = "Les informations renseignées ne sont pas valides";
         // 2] Afficher la page ayant appelé la création de dossier
-        header('location:'.URL.'navigation/goToFolder/'.$_SESSION['CURR_DIR_ID'].'');
+        header('location:'.URL.'navigation/goToFolder/'.$_POST['trueCurrID']);
     }
 
 }

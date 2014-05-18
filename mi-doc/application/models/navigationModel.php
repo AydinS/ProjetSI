@@ -407,34 +407,43 @@ class NavigationModel
 	}
 
 	/**
-	* Methode: creerDossier
+	 * Créateur : EJA
+	 * MàJ : 18/05/2014
+	 * Methode: creerDossier
 	 * Comportement : Créée un dossier
 	 * Paramètres IN : void
 	 * Paramètres OUT : void
-	 * Controlleur : dossier
+	 * Controlleur : naviguation
 	 * Page out possibles : N/A
 	*/
-	public function creerDossier($pathParent,$nomDoss,$descDoss,$id_user,$idParent,$service){
+	public function creerDossier($pathArbre,$pathParent,$nomDoss,$descDoss,$id_user,$idParent,$service){
 		
 		$pathComplet = array();
 		$pathComplet = explode('\controller../../',$pathParent);
-		$pathMkdir = $pathComplet[0].'\\'.$pathComplet[1];
+		
+		$pathMkdir = $pathComplet[0].$pathArbre;
 		$pathMkdir = str_replace('/','\\',$pathMkdir);
 		$pathMkdir = $pathMkdir.'\\'.$nomDoss;
 
+		$pathArbre = substr($pathArbre, 1);
+		$pathArbre = $pathArbre;
+
+		
 		if(mkdir($pathMkdir,0700)){
-			$req = "INSERT INTO FICHIER(ID_USER, LIBELLE, NOM, DESCRIPTION, PATHS, DOSSIER, SERVICE, PARENTS) VALUES ('".$id_user."', '".$nomDoss."', '".$nomDoss."', '".$descDoss."', '".$pathComplet[1]."', '1', '".$service."', '".$idParent."')";
+			$req = "INSERT INTO FICHIER(ID_USER, LIBELLE, NOM, DESCRIPTION, PATHS, DOSSIER, SERVICE, PARENTS) VALUES ('".$id_user."', '".$nomDoss."', '".$nomDoss."', '".$descDoss."', '".$pathArbre."', '1', '".$service."', '".$idParent."')";
 			$query = $this->db->prepare($req);
 			$query->execute();
 		}
 	}
 
 	/**
-	* Methode: dossierExits
+	 * Methode: dossierExits
+	 * Créateur : EJA
+	 * MàJ : 11/05/2014
 	 * Comportement : Vérifie si un dossier du même nom existe dans un repertoire donné 
 	 * Paramètres IN : le nom du dossier, le répertoire
 	 * Paramètres OUT : Boolean, Vrai si le dossier existe, Faux sinon
-	 * Controlleur : dossier
+	 * Controlleur : navuguation
 	 * Page out possibles : N/A
 	*/
 	public function dossierExists($nomDoss,$paths){
@@ -447,20 +456,36 @@ class NavigationModel
 			return true;
 		else return false;
 	}
-	
-	function getIdFichierWithAllInfo($uid, $fichier, $chemin, $dossier, $service, $parent)
-	{
-		$req = "SELECT * FROM FICHIER WHERE ID_USER='".$uid."' and NOM='".$fichier."' and PATHS='".$chemin."' and SERVICE='".$service."' and PARENTS=$parent";
+
+	/**
+	 * Methode: getAllFilesNotFolder
+	 * Créateur : EJA
+	 * MàJ : 18/05/2014
+	 * Comportement : Récupère uniquement les fichiers contenus dans un dossier
+	 * Paramètres IN : le dossier, la valeur indiquant à la base un dossier
+	 * Paramètres OUT : Le resultat de la requete, 0 sinon
+	 * Controlleur : recherche
+	 * Page out possibles : N/A
+	*/
+	public function getAllFilesNotFolder($idParents,$doss = 0){
+		$fichiers = array();
+		$i = 0;
+		
+			
+		$req = "SELECT * FROM FICHIER where PARENTS = '".$idParents."' AND DOSSIER = 0";
 		$query = $this->db->prepare($req);
 		$query->execute();
-		
 		$res = $query->fetchAll();
-		foreach($res as $r){
-			$infos = $r->ID_FICHIER;
-		}
+		//pour chaque fichier :
 		
-		if(count($res) > 0){
-			return $infos;
-		}else return 0;
+		if(count($res)>0){
+			
+			foreach($res as $fic){
+				$fichiers[$i]['ID_FICHIER'] = $fic->ID_FICHIER;
+				$i+=1;
+			}
+			return $fichiers;
+		}
+		else return 0;
 	}
 }

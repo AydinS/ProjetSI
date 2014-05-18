@@ -1,0 +1,8 @@
+/mi-doc/extensionDroit/demanderExtension
+  --> Test avec plusieurs sous dossiers ?
+  --> orthographe : consulter/Déposer
+
+Affichage par ordre alpha sans se soucier des types dossier/fichier ? -> Affichage par ordre alpha dossier puis ordre alpha fichier
+
+liste eleve m1
+projet c
